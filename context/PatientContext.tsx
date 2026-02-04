@@ -39,6 +39,14 @@ const defaultDemographics: PatientDemographics = {
   },
   medicalHistory: '',
   pastMedicalHistory: '',
+  relatedCharacteristics: {
+    allergy: { checked: false, note: '' },
+    drugs: { checked: false, note: '' },
+    alcohol: { checked: false, note: '' },
+    smoking: { checked: false, note: '' },
+    pipeTobacco: { checked: false, note: '' },
+    other: { checked: false, note: '' },
+  },
 };
 
 const defaultClinical: ClinicalAssessment = {

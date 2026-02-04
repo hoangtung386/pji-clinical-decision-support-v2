@@ -25,6 +25,14 @@ export interface PatientDemographics {
   };
   medicalHistory: string;
   pastMedicalHistory: string;
+  relatedCharacteristics: {
+    allergy: { checked: boolean; note: string };
+    drugs: { checked: boolean; note: string };
+    alcohol: { checked: boolean; note: string };
+    smoking: { checked: boolean; note: string };
+    pipeTobacco: { checked: boolean; note: string };
+    other: { checked: boolean; note: string };
+  };
 }
 
 export interface ClinicalAssessment {
