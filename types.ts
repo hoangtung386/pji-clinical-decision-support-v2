@@ -69,6 +69,14 @@ export interface ClinicalAssessment {
     alphaDefensin: 'Positive' | 'Negative' | 'Trace';
     leukocyteEsterase: 'Negative' | '1+' | '2+' | '3+';
   };
+  bloodTests: {
+    id: string;
+    name: string;
+    result: string;
+    note: string;
+    normalRange: string;
+    unit: string;
+  }[];
   diagnosis: {
     score: number;
     probability: number;

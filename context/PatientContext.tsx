@@ -67,6 +67,15 @@ const defaultClinical: ClinicalAssessment = {
     images: []
   },
   synovial: { wbc: 3200, pmn: 82, alphaDefensin: 'Trace', leukocyteEsterase: '1+' },
+  bloodTests: [
+    { id: 'bt_1', name: 'Bạch cầu', result: '', note: '', normalRange: '', unit: 'Tế bào/Vi thường' },
+    { id: 'bt_2', name: '%NEUT', result: '', note: '', normalRange: '', unit: '%' },
+    { id: 'bt_3', name: 'Máu lắng', result: '', note: '', normalRange: '', unit: 'mm' },
+    { id: 'bt_4', name: 'Định lượng CRP', result: '', note: '', normalRange: '', unit: 'mg/l' },
+    { id: 'bt_5', name: 'D-Dimer', result: '', note: '', normalRange: '', unit: 'μg/mL' },
+    { id: 'bt_6', name: 'Alpha Defensin', result: '', note: '', normalRange: '', unit: 'μg/mL' },
+    { id: 'bt_7', name: 'Leukocyte Esterase', result: '', note: '', normalRange: '', unit: 'cells/μL' },
+  ],
   diagnosis: { score: 0, probability: 0, status: 'Inconclusive', reasoning: [] },
 };
 

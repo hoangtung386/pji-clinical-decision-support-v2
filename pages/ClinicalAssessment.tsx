@@ -276,11 +276,83 @@ export const ClinicalAssessmentPage: React.FC = () => {
                 </div>
               </section>
 
-              {/* 3. Fluid Aspiration */}
+
+
+              {/* 3. Blood Tests */}
+              <section className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+                <div className="bg-slate-50 px-6 py-4 border-b border-slate-200">
+                  <h3 className="text-slate-900 font-bold text-lg flex items-center gap-2">
+                    <span className="flex items-center justify-center w-6 h-6 rounded-full bg-primary/10 text-primary text-xs font-bold">3</span>
+                    Xét nghiệm máu
+                  </h3>
+                </div>
+                <div className="overflow-x-auto">
+                  <table className="w-full text-sm text-left text-slate-700">
+                    <thead className="bg-slate-50 text-slate-700 font-bold border-b border-slate-200">
+                      <tr>
+                        <th className="px-4 py-3 border-r border-slate-200">Tên xét nghiệm</th>
+                        <th className="px-4 py-3 border-r border-slate-200 w-32">Kết quả</th>
+                        <th className="px-4 py-3 border-r border-slate-200 w-32">Chỉ số BT</th>
+                        <th className="px-4 py-3 border-r border-slate-200 w-32">Đơn vị</th>
+                        <th className="px-4 py-3">Ghi chú</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-slate-200">
+                      {clinical.bloodTests?.map((test, index) => (
+                        <tr key={test.id} className="hover:bg-slate-50/50">
+                          <td className="px-4 py-2 font-medium text-slate-900 border-r border-slate-200">{test.name}</td>
+                          <td className="px-4 py-2 border-r border-slate-200 p-0">
+                            <input
+                              type="text"
+                              value={test.result}
+                              onChange={(e) => {
+                                const newTests = [...(clinical.bloodTests || [])];
+                                newTests[index].result = e.target.value;
+                                setClinical(prev => ({ ...prev, bloodTests: newTests }));
+                              }}
+                              className="w-full h-full px-4 py-2 border-none bg-transparent focus:ring-inset focus:ring-2 focus:ring-primary outline-none"
+                              placeholder="..."
+                            />
+                          </td>
+                          <td className="px-4 py-2 border-r border-slate-200 p-0">
+                            <input
+                              type="text"
+                              value={test.normalRange}
+                              onChange={(e) => {
+                                const newTests = [...(clinical.bloodTests || [])];
+                                newTests[index].normalRange = e.target.value;
+                                setClinical(prev => ({ ...prev, bloodTests: newTests }));
+                              }}
+                              className="w-full h-full px-4 py-2 border-none bg-transparent focus:ring-inset focus:ring-2 focus:ring-primary outline-none"
+                              placeholder="..."
+                            />
+                          </td>
+                          <td className="px-4 py-2 text-slate-500 border-r border-slate-200 bg-slate-50/30">{test.unit}</td>
+                          <td className="px-4 py-2 p-0">
+                            <input
+                              type="text"
+                              value={test.note}
+                              onChange={(e) => {
+                                const newTests = [...(clinical.bloodTests || [])];
+                                newTests[index].note = e.target.value;
+                                setClinical(prev => ({ ...prev, bloodTests: newTests }));
+                              }}
+                              className="w-full h-full px-4 py-2 border-none bg-transparent focus:ring-inset focus:ring-2 focus:ring-primary outline-none"
+                              placeholder="..."
+                            />
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </section>
+
+              {/* 4. Fluid Aspiration */}
               <section className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
                 <div className="bg-slate-50 px-6 py-4 border-b border-slate-200 flex justify-between items-center">
                   <h3 className="text-slate-900 font-bold text-lg flex items-center gap-2">
-                    <span className="flex items-center justify-center w-6 h-6 rounded-full bg-primary/10 text-primary text-xs font-bold">3</span>
+                    <span className="flex items-center justify-center w-6 h-6 rounded-full bg-primary/10 text-primary text-xs font-bold">4</span>
                     Chọc hút dịch khớp
                   </h3>
                 </div>
@@ -393,7 +465,7 @@ export const ClinicalAssessmentPage: React.FC = () => {
             </div>
           </div>
         </div>
-      </div>
+      </div >
     </>
   );
 };
