@@ -288,13 +288,13 @@ export const ClinicalAssessmentPage: React.FC = () => {
                 </div>
                 <div className="overflow-x-auto">
                   <table className="w-full text-sm text-left text-slate-700">
+
                     <thead className="bg-slate-50 text-slate-700 font-bold border-b border-slate-200">
                       <tr>
                         <th className="px-4 py-3 border-r border-slate-200">Tên xét nghiệm</th>
                         <th className="px-4 py-3 border-r border-slate-200 w-32">Kết quả</th>
                         <th className="px-4 py-3 border-r border-slate-200 w-32">Chỉ số BT</th>
-                        <th className="px-4 py-3 border-r border-slate-200 w-32">Đơn vị</th>
-                        <th className="px-4 py-3">Ghi chú</th>
+                        <th className="px-4 py-3">Đơn vị</th>
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-slate-200">
@@ -311,7 +311,6 @@ export const ClinicalAssessmentPage: React.FC = () => {
                                 setClinical(prev => ({ ...prev, bloodTests: newTests }));
                               }}
                               className="w-full h-full px-4 py-2 border-none bg-transparent focus:ring-inset focus:ring-2 focus:ring-primary outline-none"
-                              placeholder="..."
                             />
                           </td>
                           <td className="px-4 py-2 border-r border-slate-200 p-0">
@@ -324,23 +323,9 @@ export const ClinicalAssessmentPage: React.FC = () => {
                                 setClinical(prev => ({ ...prev, bloodTests: newTests }));
                               }}
                               className="w-full h-full px-4 py-2 border-none bg-transparent focus:ring-inset focus:ring-2 focus:ring-primary outline-none"
-                              placeholder="..."
                             />
                           </td>
-                          <td className="px-4 py-2 text-slate-500 border-r border-slate-200 bg-slate-50/30">{test.unit}</td>
-                          <td className="px-4 py-2 p-0">
-                            <input
-                              type="text"
-                              value={test.note}
-                              onChange={(e) => {
-                                const newTests = [...(clinical.bloodTests || [])];
-                                newTests[index].note = e.target.value;
-                                setClinical(prev => ({ ...prev, bloodTests: newTests }));
-                              }}
-                              className="w-full h-full px-4 py-2 border-none bg-transparent focus:ring-inset focus:ring-2 focus:ring-primary outline-none"
-                              placeholder="..."
-                            />
-                          </td>
+                          <td className="px-4 py-2 text-slate-500 bg-slate-50/30">{test.unit}</td>
                         </tr>
                       ))}
                     </tbody>

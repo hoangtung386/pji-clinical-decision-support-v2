@@ -73,7 +73,6 @@ export interface ClinicalAssessment {
     id: string;
     name: string;
     result: string;
-    note: string;
     normalRange: string;
     unit: string;
   }[];
