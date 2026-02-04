@@ -47,6 +47,9 @@ const defaultDemographics: PatientDemographics = {
     pipeTobacco: { checked: false, note: '' },
     other: { checked: false, note: '' },
   },
+  surgicalHistory: [
+    { id: '1', description: '' }
+  ],
 };
 
 const defaultClinical: ClinicalAssessment = {

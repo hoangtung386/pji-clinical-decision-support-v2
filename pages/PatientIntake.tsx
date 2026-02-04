@@ -46,6 +46,26 @@ export const PatientIntake: React.FC = () => {
     }));
   };
 
+  const handleSurgicalHistoryChange = (id: string, value: string) => {
+    setDemographics(prev => ({
+      ...prev,
+      surgicalHistory: prev.surgicalHistory.map(row =>
+        row.id === id ? { ...row, description: value } : row
+      )
+    }));
+  };
+
+  const addSurgicalHistoryRow = () => {
+    setDemographics(prev => ({
+      ...prev,
+      surgicalHistory: [
+        ...prev.surgicalHistory,
+        { id: Date.now().toString(), description: '' }
+      ]
+    }));
+  };
+
+
   const handleCharacteristicChange = (key: keyof typeof demographics.relatedCharacteristics, field: 'checked' | 'note', value: any) => {
     setDemographics(prev => ({
       ...prev,
@@ -254,22 +274,47 @@ export const PatientIntake: React.FC = () => {
             </div>
           </section>
 
-          {/* Current Status */}
+          {/* Surgical History Table */}
           <section className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
             <div className="px-6 py-4 border-b border-slate-100 flex items-center justify-between bg-slate-50/50">
               <h2 className="text-base font-bold text-slate-800 flex items-center gap-2">
-                <span className="material-symbols-outlined text-primary text-[20px]">schedule</span>
-                Tình trạng hiện tại
+                <span className="material-symbols-outlined text-primary text-[20px]">surgical</span>
+                Tiền sử phẫu thuật
               </h2>
             </div>
-            <div className="p-6 grid grid-cols-1 md:grid-cols-2 gap-6">
-              <label className="flex flex-col gap-1.5">
-                <span className="text-sm font-medium text-slate-700">Ngày khởi phát triệu chứng</span>
-                <input name="symptomDate" value={demographics.symptomDate} onChange={handleInputChange} className="w-full rounded-lg border-slate-300 h-11 px-3 border" type="date" />
-                <span className="text-xs text-slate-500">
-                  Trạng thái tính toán: Nguy cơ nhiễm trùng <span className={`font-bold ${demographics.isAcute ? 'text-danger' : 'text-warning'}`}>{demographics.isAcute ? 'CẤP TÍNH' : 'MÃN TÍNH'}</span>
-                </span>
-              </label>
+            <div className="p-6">
+              <div className="border border-slate-200 rounded-lg overflow-hidden">
+                <table className="w-full text-sm text-left">
+                  <thead className="bg-slate-50 text-slate-700 font-semibold border-b border-slate-200">
+                    <tr>
+                      <th className="px-3 py-2 text-center w-16 border-r border-slate-200">STT</th>
+                      <th className="px-3 py-2">Mô tả</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-slate-200">
+                    {demographics.surgicalHistory.map((row, index) => (
+                      <tr key={row.id}>
+                        <td className="px-3 py-2 text-center text-slate-500 border-r border-slate-200 bg-slate-50">{index}</td>
+                        <td className="p-0">
+                          <input
+                            type="text"
+                            value={row.description}
+                            onChange={(e) => handleSurgicalHistoryChange(row.id, e.target.value)}
+                            className="w-full px-3 py-2 border-none focus:ring-inset focus:ring-2 focus:ring-primary outline-none bg-transparent"
+                            placeholder="Nhập thông tin phẫu thuật..."
+                          />
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+              <div className="mt-3 flex justify-center">
+                <button onClick={addSurgicalHistoryRow} className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-600 text-xs font-bold transition-colors">
+                  <span className="material-symbols-outlined text-[16px]">add</span>
+                  Thêm hàng
+                </button>
+              </div>
             </div>
           </section>
 

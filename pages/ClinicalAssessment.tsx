@@ -4,7 +4,7 @@ import { usePatient } from '../context/PatientContext';
 
 export const ClinicalAssessmentPage: React.FC = () => {
   const navigate = useNavigate();
-  const { demographics, clinical, setClinical } = usePatient();
+  const { demographics, setDemographics, clinical, setClinical } = usePatient();
 
   // Logic: ICM 2018 Scoring
   useEffect(() => {
@@ -25,7 +25,7 @@ export const ClinicalAssessmentPage: React.FC = () => {
     // Assume high ESR/CRP based on mock lab data context (adding points for demo purposes)
     score += 2; // CRP > 10
     reasoning.push('CRP tăng cao (>10 mg/L) [+2]');
-    
+
     // 2. Synovial WBC
     // Acute threshold > 10,000, Chronic > 3,000
     const wbcThreshold = demographics.isAcute ? 10000 : 3000;
@@ -113,7 +113,7 @@ export const ClinicalAssessmentPage: React.FC = () => {
     <>
       <header className="flex-shrink-0 bg-white border-b border-slate-200 px-8 py-5 flex items-center justify-between z-10">
         <div>
-           <div className="flex items-baseline gap-3">
+          <div className="flex items-baseline gap-3">
             <h2 className="text-2xl font-black tracking-tight text-slate-900">{demographics.name}</h2>
             <span className="text-slate-400 text-sm font-mono bg-slate-100 px-2 py-0.5 rounded">ID #{demographics.mrn}</span>
           </div>
@@ -133,10 +133,34 @@ export const ClinicalAssessmentPage: React.FC = () => {
       <div className="flex-1 overflow-y-auto p-8 bg-slate-50/50">
         <div className="max-w-7xl mx-auto h-full">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-            
+
             {/* LEFT COLUMN: INPUTS */}
             <div className="lg:col-span-7 xl:col-span-8 flex flex-col gap-6 pb-20">
-              
+
+              {/* 0. Current Status */}
+              <section className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+                <div className="bg-slate-50 px-6 py-4 border-b border-slate-200">
+                  <h3 className="text-slate-900 font-bold text-lg flex items-center gap-2">
+                    <span className="flex items-center justify-center w-6 h-6 rounded-full bg-primary/10 text-primary text-xs font-bold">0</span>
+                    Tình trạng hiện tại
+                  </h3>
+                </div>
+                <div className="p-6 grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <label className="flex flex-col gap-1.5">
+                    <span className="text-sm font-medium text-slate-700">Ngày khởi phát triệu chứng</span>
+                    <input
+                      type="date"
+                      value={demographics.symptomDate}
+                      onChange={(e) => setDemographics(prev => ({ ...prev, symptomDate: e.target.value }))}
+                      className="w-full rounded-lg border-slate-300 h-11 px-3 border"
+                    />
+                    <span className="text-xs text-slate-500">
+                      Phân loại: <span className={`font-bold ${demographics.isAcute ? 'text-danger' : 'text-warning'}`}>{demographics.isAcute ? 'CẤP TÍNH (<3 tuần)' : 'MÃN TÍNH (>3 tuần)'}</span>
+                    </span>
+                  </label>
+                </div>
+              </section>
+
               {/* 1. Major Criteria */}
               <section className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
                 <div className="bg-slate-50 px-6 py-4 border-b border-slate-200 flex justify-between items-center">
@@ -148,14 +172,14 @@ export const ClinicalAssessmentPage: React.FC = () => {
                 </div>
                 <div className="p-6 flex flex-col gap-4">
                   <label className="flex items-start gap-4 p-4 rounded-lg border border-slate-100 hover:bg-slate-50 transition-colors cursor-pointer">
-                    <input type="checkbox" checked={clinical.major.sinusTract} onChange={() => setClinical(p => ({...p, major: {...p.major, sinusTract: !p.major.sinusTract}}))} className="mt-1 w-5 h-5 accent-primary" />
+                    <input type="checkbox" checked={clinical.major.sinusTract} onChange={() => setClinical(p => ({ ...p, major: { ...p.major, sinusTract: !p.major.sinusTract } }))} className="mt-1 w-5 h-5 accent-primary" />
                     <div className="flex flex-col">
                       <span className="text-slate-900 font-medium leading-tight">Đường rò thông với khớp nhân tạo?</span>
                       <span className="text-slate-500 text-sm mt-1">Thông thương trực tiếp vào khoang khớp.</span>
                     </div>
                   </label>
                   <label className="flex items-start gap-4 p-4 rounded-lg border border-slate-100 hover:bg-slate-50 transition-colors cursor-pointer">
-                    <input type="checkbox" checked={clinical.major.twoPositiveCultures} onChange={() => setClinical(p => ({...p, major: {...p.major, twoPositiveCultures: !p.major.twoPositiveCultures}}))} className="mt-1 w-5 h-5 accent-primary" />
+                    <input type="checkbox" checked={clinical.major.twoPositiveCultures} onChange={() => setClinical(p => ({ ...p, major: { ...p.major, twoPositiveCultures: !p.major.twoPositiveCultures } }))} className="mt-1 w-5 h-5 accent-primary" />
                     <div className="flex flex-col">
                       <span className="text-slate-900 font-medium leading-tight">Hai mẫu cấy quanh khớp dương tính?</span>
                       <span className="text-slate-500 text-sm mt-1">Cùng một loại vi khuẩn trong 2 mẫu cấy riêng biệt.</span>
@@ -179,7 +203,7 @@ export const ClinicalAssessmentPage: React.FC = () => {
                       <label className="text-sm font-semibold text-slate-700">Mức độ đau (VAS)</label>
                       <span className="text-lg font-bold text-primary bg-primary/10 px-3 py-0.5 rounded-full">{clinical.minor.painVas} / 10</span>
                     </div>
-                    <input type="range" min="0" max="10" value={clinical.minor.painVas} onChange={(e) => setClinical(p => ({...p, minor: {...p.minor, painVas: parseInt(e.target.value)}}))} className="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-primary" />
+                    <input type="range" min="0" max="10" value={clinical.minor.painVas} onChange={(e) => setClinical(p => ({ ...p, minor: { ...p.minor, painVas: parseInt(e.target.value) } }))} className="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-primary" />
                     <div className="flex justify-between text-xs text-slate-400 mt-2 font-medium">
                       <span>Không đau</span>
                       <span>Trung bình</span>
@@ -214,25 +238,25 @@ export const ClinicalAssessmentPage: React.FC = () => {
                   <div className="flex flex-col gap-1.5">
                     <label className="text-xs font-bold text-slate-500 uppercase tracking-wide">Bạch cầu dịch khớp</label>
                     <div className="relative">
-                      <input type="number" value={clinical.synovial.wbc} onChange={(e) => setClinical(p => ({...p, synovial: {...p.synovial, wbc: parseInt(e.target.value)}}))} className="w-full rounded-lg border-slate-200 text-slate-900 font-mono text-lg py-2.5 pl-3 pr-12 border focus:ring-primary focus:border-primary shadow-sm" />
+                      <input type="number" value={clinical.synovial.wbc} onChange={(e) => setClinical(p => ({ ...p, synovial: { ...p.synovial, wbc: parseInt(e.target.value) } }))} className="w-full rounded-lg border-slate-200 text-slate-900 font-mono text-lg py-2.5 pl-3 pr-12 border focus:ring-primary focus:border-primary shadow-sm" />
                       <span className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm font-medium">cells/µL</span>
                     </div>
                   </div>
                   <div className="flex flex-col gap-1.5">
                     <label className="text-xs font-bold text-slate-500 uppercase tracking-wide">% Bạch cầu đa nhân</label>
                     <div className="relative">
-                       <input type="number" value={clinical.synovial.pmn} onChange={(e) => setClinical(p => ({...p, synovial: {...p.synovial, pmn: parseInt(e.target.value)}}))} className="w-full rounded-lg border-slate-200 text-slate-900 font-mono text-lg py-2.5 pl-3 pr-12 border focus:ring-primary focus:border-primary shadow-sm" />
+                      <input type="number" value={clinical.synovial.pmn} onChange={(e) => setClinical(p => ({ ...p, synovial: { ...p.synovial, pmn: parseInt(e.target.value) } }))} className="w-full rounded-lg border-slate-200 text-slate-900 font-mono text-lg py-2.5 pl-3 pr-12 border focus:ring-primary focus:border-primary shadow-sm" />
                       <span className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm font-medium">%</span>
                     </div>
                   </div>
                   <div className="flex flex-col gap-1.5">
-                     <label className="text-xs font-bold text-slate-500 uppercase tracking-wide">Leukocyte Esterase</label>
-                     <select value={clinical.synovial.leukocyteEsterase} onChange={(e) => setClinical(p => ({...p, synovial: {...p.synovial, leukocyteEsterase: e.target.value as any}}))} className="w-full rounded-lg border-slate-200 text-slate-900 text-base py-2.5 border bg-white">
-                        <option>Negative</option>
-                        <option>1+</option>
-                        <option>2+</option>
-                        <option>3+</option>
-                     </select>
+                    <label className="text-xs font-bold text-slate-500 uppercase tracking-wide">Leukocyte Esterase</label>
+                    <select value={clinical.synovial.leukocyteEsterase} onChange={(e) => setClinical(p => ({ ...p, synovial: { ...p.synovial, leukocyteEsterase: e.target.value as any } }))} className="w-full rounded-lg border-slate-200 text-slate-900 text-base py-2.5 border bg-white">
+                      <option>Negative</option>
+                      <option>1+</option>
+                      <option>2+</option>
+                      <option>3+</option>
+                    </select>
                   </div>
                 </div>
               </section>
@@ -241,7 +265,7 @@ export const ClinicalAssessmentPage: React.FC = () => {
             {/* RIGHT COLUMN: AI DIAGNOSIS */}
             <div className="lg:col-span-5 xl:col-span-4 h-full relative">
               <div className="sticky top-6 flex flex-col gap-6">
-                
+
                 {/* Main AI Card */}
                 <div className="bg-white rounded-xl shadow-lg border border-slate-200 overflow-hidden relative">
                   <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-green-400 via-yellow-400 to-red-500"></div>
@@ -262,14 +286,14 @@ export const ClinicalAssessmentPage: React.FC = () => {
                       <div className="relative h-48 w-48">
                         <svg className="h-full w-full -rotate-90" viewBox="0 0 36 36">
                           <path className="text-slate-100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" strokeWidth="3.5" />
-                          <path 
+                          <path
                             className={`${getStatusColor(clinical.diagnosis.status)} transition-all duration-1000 ease-out`}
                             strokeDasharray={`${clinical.diagnosis.probability}, 100`}
-                            d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" 
-                            fill="none" 
-                            stroke="currentColor" 
-                            strokeLinecap="round" 
-                            strokeWidth="3.5" 
+                            d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeLinecap="round"
+                            strokeWidth="3.5"
                           />
                         </svg>
                         <div className="absolute inset-0 flex flex-col items-center justify-center">
@@ -281,15 +305,15 @@ export const ClinicalAssessmentPage: React.FC = () => {
                         <div className={`inline-flex items-center gap-2 px-3 py-1 rounded-full border bg-opacity-10 ${clinical.diagnosis.status === 'Infected' ? 'bg-red-500 border-red-200' : 'bg-green-500 border-green-200'}`}>
                           <span className={`text-sm font-bold ${getStatusColor(clinical.diagnosis.status)}`}>{getStatusTextDetailed(clinical.diagnosis.status)}</span>
                         </div>
-                         <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-md bg-slate-100 text-slate-600 text-xs font-semibold border border-slate-200">
-                           <span className="material-symbols-outlined text-[14px]">timelapse</span>
-                           {demographics.isAcute ? 'Nhiễm trùng cấp tính (< 3 tuần)' : 'Nhiễm trùng mãn tính (> 3 tuần)'}
-                         </div>
+                        <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-md bg-slate-100 text-slate-600 text-xs font-semibold border border-slate-200">
+                          <span className="material-symbols-outlined text-[14px]">timelapse</span>
+                          {demographics.isAcute ? 'Nhiễm trùng cấp tính (< 3 tuần)' : 'Nhiễm trùng mãn tính (> 3 tuần)'}
+                        </div>
                       </div>
                     </div>
                   </div>
 
-                   {/* RAG Reasoning Box */}
+                  {/* RAG Reasoning Box */}
                   <div className="bg-slate-50 p-6 border-t border-slate-100">
                     <h4 className="text-sm font-bold text-slate-900 flex items-center gap-2 mb-4">
                       <span className="material-symbols-outlined text-primary text-base">psychology</span>
@@ -299,17 +323,17 @@ export const ClinicalAssessmentPage: React.FC = () => {
                       {clinical.diagnosis.reasoning.map((text, idx) => (
                         <div key={idx} className="flex gap-3 items-start">
                           <div className="mt-1 min-w-4 w-4 h-4 rounded-full bg-primary/20 flex items-center justify-center">
-                             <div className="w-1.5 h-1.5 rounded-full bg-primary"></div>
+                            <div className="w-1.5 h-1.5 rounded-full bg-primary"></div>
                           </div>
                           <p className="text-sm text-slate-600 leading-relaxed">{text}</p>
                         </div>
                       ))}
                       {clinical.diagnosis.reasoning.length === 0 && <p className="text-sm text-slate-400 italic">Chưa có tiêu chuẩn đáng kể nào.</p>}
                     </div>
-                     <div className="mt-5 pt-4 border-t border-slate-200">
+                    <div className="mt-5 pt-4 border-t border-slate-200">
                       <button className="text-xs text-primary font-medium hover:underline flex items-center gap-1">
-                          Xem tham chiếu Hướng dẫn ICM 2018
-                          <span className="material-symbols-outlined text-[14px]">open_in_new</span>
+                        Xem tham chiếu Hướng dẫn ICM 2018
+                        <span className="material-symbols-outlined text-[14px]">open_in_new</span>
                       </button>
                     </div>
                   </div>
