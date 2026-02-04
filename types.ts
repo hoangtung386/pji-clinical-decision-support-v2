@@ -47,20 +47,21 @@ export interface ClinicalAssessment {
   };
   symptoms: {
     fever: boolean;
-    edema: boolean;
+    sinusTract: boolean;
     erythema: boolean;
     pain: boolean;
     swelling: boolean;
     drainage: boolean;
     purulence: boolean;
   };
-  minor: {
-    erythema: boolean;
-    swelling: boolean;
-    warmth: boolean;
-    fever: boolean;
-    drainage: boolean;
-    painVas: number;
+  imaging: {
+    description: string;
+    images: {
+      id: string;
+      url: string;
+      type: 'X-ray' | 'CT' | 'Ultrasound';
+      name: string;
+    }[];
   };
   synovial: {
     wbc: number;

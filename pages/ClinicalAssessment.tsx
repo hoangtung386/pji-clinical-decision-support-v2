@@ -12,7 +12,7 @@ export const ClinicalAssessmentPage: React.FC = () => {
     const reasoning: string[] = [];
 
     // Major Criteria (Immediate Infection)
-    if (clinical.major.sinusTract || clinical.major.twoPositiveCultures) {
+    if (clinical.symptoms.sinusTract || clinical.major.twoPositiveCultures) {
       setClinical(prev => ({
         ...prev,
         diagnosis: { score: 99, probability: 100, status: 'Infected', reasoning: ['Tiêu chuẩn chính: Đường rò hoặc 2 mẫu cấy dương tính'] }
@@ -76,14 +76,7 @@ export const ClinicalAssessmentPage: React.FC = () => {
       diagnosis: { score, probability, status, reasoning }
     }));
 
-  }, [clinical.major, clinical.minor, clinical.synovial, demographics.isAcute, setClinical]);
-
-  const toggleMinor = (key: keyof typeof clinical.minor) => {
-    setClinical(prev => ({
-      ...prev,
-      minor: { ...prev.minor, [key]: !prev.minor[key] }
-    }));
-  };
+  }, [clinical.symptoms, clinical.major, clinical.synovial, demographics.isAcute, setClinical]);
 
   const getStatusColor = (status: string) => {
     if (status === 'Infected') return 'text-danger';
@@ -103,11 +96,6 @@ export const ClinicalAssessmentPage: React.FC = () => {
     return 'Không nhiễm trùng';
   }
 
-  const minorLabels: Record<string, string> = {
-    erythema: 'Ban đỏ',
-    swelling: 'Sưng',
-    warmth: 'Nóng',
-  };
 
   return (
     <>
@@ -165,14 +153,14 @@ export const ClinicalAssessmentPage: React.FC = () => {
               <section className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
                 <div className="bg-slate-50 px-6 py-4 border-b border-slate-200">
                   <h3 className="text-slate-900 font-bold text-lg flex items-center gap-2">
-                    <span className="flex items-center justify-center w-6 h-6 rounded-full bg-primary/10 text-primary text-xs font-bold">0+</span>
+                    <span className="flex items-center justify-center w-6 h-6 rounded-full bg-primary/10 text-primary text-xs font-bold">1</span>
                     Triệu chứng
                   </h3>
                 </div>
                 <div className="p-6 grid grid-cols-2 lg:grid-cols-4 gap-4">
                   {[
                     { key: 'fever', label: 'Sốt' },
-                    { key: 'edema', label: 'Phù nề' },
+                    { key: 'sinusTract', label: 'Đường rò' },
                     { key: 'erythema', label: 'Tấy đỏ' },
                     { key: 'pain', label: 'Đau' },
                     { key: 'swelling', label: 'Sưng nề' },
@@ -198,66 +186,91 @@ export const ClinicalAssessmentPage: React.FC = () => {
                 </div>
               </section>
 
-              {/* 1. Major Criteria */}
-              <section className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
-                <div className="bg-slate-50 px-6 py-4 border-b border-slate-200 flex justify-between items-center">
-                  <h3 className="text-slate-900 font-bold text-lg flex items-center gap-2">
-                    <span className="flex items-center justify-center w-6 h-6 rounded-full bg-primary/10 text-primary text-xs font-bold">1</span>
-                    Tiêu chuẩn chính (ICM 2018)
-                  </h3>
-                  <span className="text-xs text-slate-400 font-medium bg-slate-100 px-2 py-1 rounded">Nghiêm trọng</span>
-                </div>
-                <div className="p-6 flex flex-col gap-4">
-                  <label className="flex items-start gap-4 p-4 rounded-lg border border-slate-100 hover:bg-slate-50 transition-colors cursor-pointer">
-                    <input type="checkbox" checked={clinical.major.sinusTract} onChange={() => setClinical(p => ({ ...p, major: { ...p.major, sinusTract: !p.major.sinusTract } }))} className="mt-1 w-5 h-5 accent-primary" />
-                    <div className="flex flex-col">
-                      <span className="text-slate-900 font-medium leading-tight">Đường rò thông với khớp nhân tạo?</span>
-                      <span className="text-slate-500 text-sm mt-1">Thông thương trực tiếp vào khoang khớp.</span>
-                    </div>
-                  </label>
-                  <label className="flex items-start gap-4 p-4 rounded-lg border border-slate-100 hover:bg-slate-50 transition-colors cursor-pointer">
-                    <input type="checkbox" checked={clinical.major.twoPositiveCultures} onChange={() => setClinical(p => ({ ...p, major: { ...p.major, twoPositiveCultures: !p.major.twoPositiveCultures } }))} className="mt-1 w-5 h-5 accent-primary" />
-                    <div className="flex flex-col">
-                      <span className="text-slate-900 font-medium leading-tight">Hai mẫu cấy quanh khớp dương tính?</span>
-                      <span className="text-slate-500 text-sm mt-1">Cùng một loại vi khuẩn trong 2 mẫu cấy riêng biệt.</span>
-                    </div>
-                  </label>
-                </div>
-              </section>
+              {/* 1. Major Criteria REMOVED */}
 
-              {/* 2. Symptom Assessment */}
+              {/* 2. Diagnostic Imaging */}
               <section className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
                 <div className="bg-slate-50 px-6 py-4 border-b border-slate-200">
                   <h3 className="text-slate-900 font-bold text-lg flex items-center gap-2">
                     <span className="flex items-center justify-center w-6 h-6 rounded-full bg-primary/10 text-primary text-xs font-bold">2</span>
-                    Đánh giá triệu chứng
+                    Chuẩn đoán hình ảnh
                   </h3>
                 </div>
-                <div className="p-6 grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
-                  {/* Pain Slider */}
-                  <div className="col-span-full mb-2">
-                    <div className="flex justify-between items-center mb-2">
-                      <label className="text-sm font-semibold text-slate-700">Mức độ đau (VAS)</label>
-                      <span className="text-lg font-bold text-primary bg-primary/10 px-3 py-0.5 rounded-full">{clinical.minor.painVas} / 10</span>
-                    </div>
-                    <input type="range" min="0" max="10" value={clinical.minor.painVas} onChange={(e) => setClinical(p => ({ ...p, minor: { ...p.minor, painVas: parseInt(e.target.value) } }))} className="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-primary" />
-                    <div className="flex justify-between text-xs text-slate-400 mt-2 font-medium">
-                      <span>Không đau</span>
-                      <span>Trung bình</span>
-                      <span>Dữ dội</span>
-                    </div>
+                <div className="p-6 flex flex-col gap-6">
+                  {/* Description */}
+                  <div className="flex flex-col gap-2">
+                    <label className="text-sm font-semibold text-slate-700">Mô tả hình ảnh</label>
+                    <textarea
+                      className="w-full rounded-lg border-slate-200 min-h-[100px] p-3 text-sm focus:ring-primary focus:border-primary"
+                      placeholder="Nhập mô tả chi tiết về kết quả chẩn đoán hình ảnh..."
+                      value={clinical.imaging?.description || ''}
+                      onChange={(e) => setClinical(prev => ({
+                        ...prev,
+                        imaging: { ...prev.imaging, description: e.target.value }
+                      }))}
+                    ></textarea>
                   </div>
 
-                  {/* Local Signs */}
-                  <div className="col-span-full">
-                    <span className="text-sm font-semibold text-slate-700 mb-2 block">Dấu hiệu tại chỗ</span>
-                    <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-                      {['erythema', 'swelling', 'warmth'].map((key) => (
-                        <label key={key} className={`flex items-center gap-2 p-3 border rounded-lg cursor-pointer transition-all ${clinical.minor[key as keyof typeof clinical.minor] ? 'border-primary bg-primary/5' : 'border-slate-200 bg-slate-50'}`}>
-                          <input type="checkbox" checked={clinical.minor[key as keyof typeof clinical.minor] as boolean} onChange={() => toggleMinor(key as any)} className="accent-primary" />
-                          <span className="text-sm font-medium text-slate-700 capitalize">{minorLabels[key] || key}</span>
-                        </label>
+                  {/* Image Upload */}
+                  <div className="flex flex-col gap-2">
+                    <label className="text-sm font-semibold text-slate-700">Hình ảnh đính kèm</label>
+
+                    <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-4">
+                      {clinical.imaging?.images.map((img) => (
+                        <div key={img.id} className="relative group border border-slate-200 rounded-lg overflow-hidden bg-slate-50 aspect-square">
+                          <img src={img.url} alt={img.name} className="w-full h-full object-cover" />
+                          <div className="absolute inset-x-0 bottom-0 bg-black/60 p-2 text-white text-xs truncate">
+                            <span className="font-bold block">{img.type}</span>
+                            <span className="opacity-80 text-[10px]">{img.name}</span>
+                          </div>
+                          <button
+                            onClick={() => setClinical(prev => ({
+                              ...prev,
+                              imaging: {
+                                ...prev.imaging,
+                                images: prev.imaging.images.filter(i => i.id !== img.id)
+                              }
+                            }))}
+                            className="absolute top-1 right-1 w-6 h-6 bg-red-500 text-white rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
+                          >
+                            <span className="material-symbols-outlined text-[14px]">close</span>
+                          </button>
+                        </div>
                       ))}
+
+                      <label className="flex flex-col items-center justify-center border-2 border-dashed border-slate-300 rounded-lg hover:bg-slate-50 cursor-pointer transition-colors aspect-square">
+                        <span className="material-symbols-outlined text-slate-400 text-3xl mb-1">add_photo_alternate</span>
+                        <span className="text-xs text-slate-500 font-medium">Thêm ảnh mới</span>
+                        <input
+                          type="file"
+                          accept="image/*"
+                          className="hidden"
+                          onChange={(e) => {
+                            if (e.target.files && e.target.files[0]) {
+                              const file = e.target.files[0];
+                              const type = prompt('Chọn loại hình ảnh (X-quang, CT, Siêu âm):', 'X-quang');
+                              if (type) {
+                                const validTypes = ['X-quang', 'CT', 'Siêu âm'];
+                                const selectedType = validTypes.includes(type) ? type as any : 'Other';
+                                const newImage = {
+                                  id: Math.random().toString(36).substr(2, 9),
+                                  url: URL.createObjectURL(file), // Note: Using ObjectURL for demo
+                                  type: selectedType,
+                                  name: file.name
+                                };
+                                setClinical(prev => ({
+                                  ...prev,
+                                  imaging: {
+                                    ...prev.imaging,
+                                    images: [...prev.imaging.images, newImage]
+                                  }
+                                }));
+                              }
+                              e.target.value = ''; // Reset input
+                            }
+                          }}
+                        />
+                      </label>
                     </div>
                   </div>
                 </div>
