@@ -68,13 +68,20 @@ const defaultClinical: ClinicalAssessment = {
   },
   synovial: { wbc: 3200, pmn: 82, alphaDefensin: 'Trace', leukocyteEsterase: '1+' },
   bloodTests: [
-    { id: 'bt_1', name: 'Bạch cầu', result: '', normalRange: '', unit: 'Tế bào/Vi thường' },
+    { id: 'bt_1', name: 'Bạch cầu', result: '', normalRange: '', unit: 'Tế bào/Vi trường' },
     { id: 'bt_2', name: '%NEUT', result: '', normalRange: '', unit: '%' },
     { id: 'bt_3', name: 'Máu lắng', result: '', normalRange: '', unit: 'mm' },
     { id: 'bt_4', name: 'Định lượng CRP', result: '', normalRange: '', unit: 'mg/l' },
     { id: 'bt_5', name: 'D-Dimer', result: '', normalRange: '', unit: 'μg/mL' },
     { id: 'bt_6', name: 'Alpha Defensin', result: '', normalRange: '', unit: 'μg/mL' },
     { id: 'bt_7', name: 'Leukocyte Esterase', result: '', normalRange: '', unit: 'cells/μL' },
+  ],
+  fluidAnalysis: [
+    { id: 'fa_1', name: 'Bạch cầu', result: '', normalRange: '', unit: '' },
+    { id: 'fa_2', name: '%NEUT', result: '', normalRange: '', unit: '%' },
+    { id: 'fa_3', name: 'CRP', result: '', normalRange: '', unit: '' },
+    { id: 'fa_4', name: 'Cấy khuẩn', result: '', normalRange: '', unit: 'CFU/mL' },
+    { id: 'fa_5', name: 'Nhuộm Gram', result: '', normalRange: '', unit: '' },
   ],
   diagnosis: { score: 0, probability: 0, status: 'Inconclusive', reasoning: [] },
 };

@@ -76,6 +76,13 @@ export interface ClinicalAssessment {
     normalRange: string;
     unit: string;
   }[];
+  fluidAnalysis: {
+    id: string;
+    name: string;
+    result: string;
+    normalRange: string;
+    unit: string;
+  }[];
   diagnosis: {
     score: number;
     probability: number;
