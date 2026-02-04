@@ -28,7 +28,7 @@ export const PatientIntake: React.FC = () => {
     }
   }, [demographics.surgeryDate, demographics.symptomDate, demographics.height, demographics.weight, setDemographics]);
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const { name, value, type } = e.target;
     setDemographics(prev => ({
       ...prev,
@@ -72,7 +72,7 @@ export const PatientIntake: React.FC = () => {
 
       <div className="flex-1 overflow-y-auto p-8 pb-32">
         <div className="max-w-5xl mx-auto space-y-6">
-          
+
           {/* Identity Section */}
           <section className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
             <div className="px-6 py-4 border-b border-slate-100 flex items-center justify-between bg-slate-50/50">
@@ -97,7 +97,16 @@ export const PatientIntake: React.FC = () => {
                 <span className="text-sm font-medium text-slate-700">Ngày sinh</span>
                 <input name="dob" value={demographics.dob} onChange={handleInputChange} className="w-full rounded-lg border-slate-300 h-11 px-3 focus:ring-primary focus:border-primary border" type="date" />
               </label>
-              
+
+              <label className="flex flex-col gap-1.5">
+                <span className="text-sm font-medium text-slate-700">Số điện thoại</span>
+                <input name="phone" value={demographics.phone} onChange={handleInputChange} className="w-full rounded-lg border-slate-300 h-11 px-3 focus:ring-primary focus:border-primary border" placeholder="VD: 0912345678" type="tel" />
+              </label>
+              <label className="flex flex-col md:col-span-2 gap-1.5">
+                <span className="text-sm font-medium text-slate-700">Địa chỉ</span>
+                <input name="address" value={demographics.address} onChange={handleInputChange} className="w-full rounded-lg border-slate-300 h-11 px-3 focus:ring-primary focus:border-primary border" placeholder="VD: Số 1, Đường ABC, Quận XYZ, TP.HCM" type="text" />
+              </label>
+
               <div className="grid grid-cols-2 gap-4 col-span-2 md:col-span-2">
                 <label className="flex flex-col gap-1.5">
                   <span className="text-sm font-medium text-slate-700">Chiều cao (cm)</span>
@@ -118,45 +127,41 @@ export const PatientIntake: React.FC = () => {
             </div>
           </section>
 
-          {/* Surgical Context */}
+          {/* Medical History Context */}
           <section className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
-             <div className="px-6 py-4 border-b border-slate-100 flex items-center justify-between bg-slate-50/50">
+            <div className="px-6 py-4 border-b border-slate-100 flex items-center justify-between bg-slate-50/50">
               <h2 className="text-base font-bold text-slate-800 flex items-center gap-2">
-                <span className="material-symbols-outlined text-primary text-[20px]">surgical</span>
-                Thông tin phẫu thuật
+                <span className="material-symbols-outlined text-primary text-[20px]">history</span>
+                Lịch sử y tế
               </h2>
             </div>
-            <div className="p-6 grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="p-6 grid grid-cols-1 gap-6">
               <label className="flex flex-col gap-1.5">
-                <span className="text-sm font-medium text-slate-700">Ngày phẫu thuật ban đầu</span>
-                <input name="surgeryDate" value={demographics.surgeryDate} onChange={handleInputChange} className="w-full rounded-lg border-slate-300 h-11 px-3 border" type="date" />
+                <span className="text-sm font-medium text-slate-700">Bệnh sử</span>
+                <textarea
+                  name="medicalHistory"
+                  value={demographics.medicalHistory}
+                  onChange={handleInputChange}
+                  className="w-full rounded-lg border-slate-300 min-h-[120px] p-3 border focus:ring-primary focus:border-primary"
+                  placeholder="Mô tả chi tiết quá trình bệnh lý..."
+                />
               </label>
               <label className="flex flex-col gap-1.5">
-                <span className="text-sm font-medium text-slate-700">Loại cố định</span>
-                <select name="fixationType" value={demographics.fixationType} onChange={handleInputChange} className="w-full rounded-lg border-slate-300 h-11 px-3 border bg-white">
-                  <option value="cemented">Có xi măng</option>
-                  <option value="uncemented">Không xi măng / Press-fit</option>
-                  <option value="hybrid">Hỗn hợp</option>
-                </select>
+                <span className="text-sm font-medium text-slate-700">Tiền sử bệnh</span>
+                <textarea
+                  name="pastMedicalHistory"
+                  value={demographics.pastMedicalHistory}
+                  onChange={handleInputChange}
+                  className="w-full rounded-lg border-slate-300 min-h-[120px] p-3 border focus:ring-primary focus:border-primary"
+                  placeholder="Các bệnh lý nền, dị ứng, phẫu thuật trước đây..."
+                />
               </label>
-              
-              <div className="flex flex-col gap-3">
-                <span className="text-sm font-medium text-slate-700">Loại thủ thuật</span>
-                <div className="flex gap-4">
-                  {['THA', 'TKA'].map((type) => (
-                    <label key={type} className={`flex items-center gap-2 px-4 py-2.5 rounded-lg border cursor-pointer flex-1 justify-center transition-all ${demographics.implantType === type ? 'border-primary bg-primary/5' : 'border-slate-200'}`}>
-                      <input type="radio" name="implantType" value={type} checked={demographics.implantType === type} onChange={handleInputChange} className="accent-primary" />
-                      <span className="text-sm font-medium text-slate-700">{type}</span>
-                    </label>
-                  ))}
-                </div>
-              </div>
             </div>
           </section>
 
           {/* Risk Factors */}
           <section className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
-             <div className="px-6 py-4 border-b border-slate-100 flex items-center justify-between bg-slate-50/50">
+            <div className="px-6 py-4 border-b border-slate-100 flex items-center justify-between bg-slate-50/50">
               <h2 className="text-base font-bold text-slate-800 flex items-center gap-2">
                 <span className="material-symbols-outlined text-primary text-[20px]">warning</span>
                 Yếu tố nguy cơ & Cơ địa
@@ -181,14 +186,14 @@ export const PatientIntake: React.FC = () => {
 
           {/* Current Status */}
           <section className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
-             <div className="px-6 py-4 border-b border-slate-100 flex items-center justify-between bg-slate-50/50">
+            <div className="px-6 py-4 border-b border-slate-100 flex items-center justify-between bg-slate-50/50">
               <h2 className="text-base font-bold text-slate-800 flex items-center gap-2">
                 <span className="material-symbols-outlined text-primary text-[20px]">schedule</span>
                 Tình trạng hiện tại
               </h2>
             </div>
             <div className="p-6 grid grid-cols-1 md:grid-cols-2 gap-6">
-               <label className="flex flex-col gap-1.5">
+              <label className="flex flex-col gap-1.5">
                 <span className="text-sm font-medium text-slate-700">Ngày khởi phát triệu chứng</span>
                 <input name="symptomDate" value={demographics.symptomDate} onChange={handleInputChange} className="w-full rounded-lg border-slate-300 h-11 px-3 border" type="date" />
                 <span className="text-xs text-slate-500">

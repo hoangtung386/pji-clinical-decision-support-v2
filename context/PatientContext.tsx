@@ -18,6 +18,8 @@ const defaultDemographics: PatientDemographics = {
   mrn: '482910',
   dob: '1965-10-12',
   gender: 'male',
+  phone: '',
+  address: '',
   height: 175,
   weight: 70,
   bmi: 22.9,
@@ -35,6 +37,8 @@ const defaultDemographics: PatientDemographics = {
     malnutrition: false,
     liverDisease: false,
   },
+  medicalHistory: '',
+  pastMedicalHistory: '',
 };
 
 const defaultClinical: ClinicalAssessment = {

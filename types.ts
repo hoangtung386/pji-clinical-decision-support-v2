@@ -4,6 +4,8 @@ export interface PatientDemographics {
   mrn: string;
   dob: string;
   gender: string;
+  phone: string;
+  address: string;
   height: number;
   weight: number;
   bmi: number;
@@ -21,6 +23,8 @@ export interface PatientDemographics {
     malnutrition: boolean;
     liverDisease: boolean;
   };
+  medicalHistory: string;
+  pastMedicalHistory: string;
 }
 
 export interface ClinicalAssessment {
