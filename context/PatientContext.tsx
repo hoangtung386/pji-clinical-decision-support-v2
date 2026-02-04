@@ -44,7 +44,6 @@ const defaultDemographics: PatientDemographics = {
     drugs: { checked: false, note: '' },
     alcohol: { checked: false, note: '' },
     smoking: { checked: false, note: '' },
-    pipeTobacco: { checked: false, note: '' },
     other: { checked: false, note: '' },
   },
   surgicalHistory: [
@@ -54,6 +53,15 @@ const defaultDemographics: PatientDemographics = {
 
 const defaultClinical: ClinicalAssessment = {
   major: { sinusTract: false, twoPositiveCultures: false },
+  symptoms: {
+    fever: false,
+    edema: false,
+    erythema: false,
+    pain: false,
+    swelling: false,
+    drainage: false,
+    purulence: false,
+  },
   minor: { erythema: false, swelling: true, warmth: false, fever: true, drainage: false, painVas: 7 },
   synovial: { wbc: 3200, pmn: 82, alphaDefensin: 'Trace', leukocyteEsterase: '1+' },
   diagnosis: { score: 0, probability: 0, status: 'Inconclusive', reasoning: [] },

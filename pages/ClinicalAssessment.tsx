@@ -142,7 +142,7 @@ export const ClinicalAssessmentPage: React.FC = () => {
                 <div className="bg-slate-50 px-6 py-4 border-b border-slate-200">
                   <h3 className="text-slate-900 font-bold text-lg flex items-center gap-2">
                     <span className="flex items-center justify-center w-6 h-6 rounded-full bg-primary/10 text-primary text-xs font-bold">0</span>
-                    Tình trạng hiện tại
+                    Ngày khởi phát bệnh
                   </h3>
                 </div>
                 <div className="p-6 grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -158,6 +158,43 @@ export const ClinicalAssessmentPage: React.FC = () => {
                       Phân loại: <span className={`font-bold ${demographics.isAcute ? 'text-danger' : 'text-warning'}`}>{demographics.isAcute ? 'CẤP TÍNH (<3 tuần)' : 'MÃN TÍNH (>3 tuần)'}</span>
                     </span>
                   </label>
+                </div>
+              </section>
+
+              {/* 0.1 Symptoms Checklist */}
+              <section className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+                <div className="bg-slate-50 px-6 py-4 border-b border-slate-200">
+                  <h3 className="text-slate-900 font-bold text-lg flex items-center gap-2">
+                    <span className="flex items-center justify-center w-6 h-6 rounded-full bg-primary/10 text-primary text-xs font-bold">0+</span>
+                    Triệu chứng
+                  </h3>
+                </div>
+                <div className="p-6 grid grid-cols-2 lg:grid-cols-4 gap-4">
+                  {[
+                    { key: 'fever', label: 'Sốt' },
+                    { key: 'edema', label: 'Phù nề' },
+                    { key: 'erythema', label: 'Tấy đỏ' },
+                    { key: 'pain', label: 'Đau' },
+                    { key: 'swelling', label: 'Sưng nề' },
+                    { key: 'drainage', label: 'Chảy dịch' },
+                    { key: 'purulence', label: 'Có mủ' },
+                  ].map((item) => (
+                    <label key={item.key} className="flex items-center gap-3 p-3 rounded-lg hover:bg-slate-50 border border-transparent hover:border-slate-100 transition-colors cursor-pointer">
+                      <input
+                        type="checkbox"
+                        checked={clinical.symptoms?.[item.key as keyof typeof clinical.symptoms] || false}
+                        onChange={() => setClinical(prev => ({
+                          ...prev,
+                          symptoms: {
+                            ...prev.symptoms,
+                            [item.key]: !prev.symptoms[item.key as keyof typeof clinical.symptoms]
+                          }
+                        }))}
+                        className="w-5 h-5 rounded border-slate-300 accent-primary"
+                      />
+                      <span className="text-sm font-medium text-slate-700">{item.label}</span>
+                    </label>
+                  ))}
                 </div>
               </section>
 

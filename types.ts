@@ -30,7 +30,6 @@ export interface PatientDemographics {
     drugs: { checked: boolean; note: string };
     alcohol: { checked: boolean; note: string };
     smoking: { checked: boolean; note: string };
-    pipeTobacco: { checked: boolean; note: string };
     other: { checked: boolean; note: string };
   };
   surgicalHistory: {
@@ -45,6 +44,15 @@ export interface ClinicalAssessment {
   major: {
     sinusTract: boolean;
     twoPositiveCultures: boolean;
+  };
+  symptoms: {
+    fever: boolean;
+    edema: boolean;
+    erythema: boolean;
+    pain: boolean;
+    swelling: boolean;
+    drainage: boolean;
+    purulence: boolean;
   };
   minor: {
     erythema: boolean;

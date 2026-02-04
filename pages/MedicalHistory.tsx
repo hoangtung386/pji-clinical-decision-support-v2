@@ -70,9 +70,8 @@ export const MedicalHistoryPage: React.FC = () => {
         { key: 'allergy', label: 'Dị ứng', code: '01', notePlaceholder: '(Dị nguyên)' },
         { key: 'drugs', label: 'Ma túy', code: '02' },
         { key: 'alcohol', label: 'Rượu bia', code: '03' },
-        { key: 'smoking', label: 'Thuốc lá', code: '04' },
-        { key: 'pipeTobacco', label: 'Thuốc lào', code: '05' },
-        { key: 'other', label: 'Khác', code: '06' },
+        { key: 'smoking', label: 'Hút thuốc', code: '04' },
+        { key: 'other', label: 'Khác', code: '05' },
     ];
 
     // Comorbidity labels removed
@@ -146,7 +145,7 @@ export const MedicalHistoryPage: React.FC = () => {
                                                     <tr key={item.key} className="hover:bg-slate-50/50">
                                                         <td className="px-3 py-2 text-center text-slate-500 border-r border-slate-200">{item.code}</td>
                                                         <td className="px-3 py-2 font-medium text-slate-900 border-r border-slate-200">
-                                                            - {item.label}
+                                                            {item.label}
                                                         </td>
                                                         <td className="px-3 py-2 text-center border-r border-slate-200">
                                                             <input
@@ -195,7 +194,7 @@ export const MedicalHistoryPage: React.FC = () => {
                                             <th className="px-3 py-2 w-32 border-r border-slate-200">Thời gian</th>
                                             <th className="px-3 py-2 border-r border-slate-200">Phương pháp phẫu thuật</th>
                                             <th className="px-3 py-2 border-r border-slate-200">Ghi chú</th>
-                                            <th className="px-3 py-2 text-center w-24">Thao tác</th>
+                                            <th className="px-3 py-2 text-center w-24"></th>
                                         </tr>
                                     </thead>
                                     <tbody className="divide-y divide-slate-200">
@@ -208,7 +207,7 @@ export const MedicalHistoryPage: React.FC = () => {
                                                         value={row.surgeryDate}
                                                         onChange={(e) => handleSurgicalHistoryChange(row.id, 'surgeryDate', e.target.value)}
                                                         className="w-full px-3 py-2 border-none focus:ring-inset focus:ring-2 focus:ring-primary outline-none bg-transparent"
-                                                        placeholder="Năm/Ngày"
+                                                        placeholder="dd/mm/yyyy"
                                                     />
                                                 </td>
                                                 <td className="p-0 border-r border-slate-200">
