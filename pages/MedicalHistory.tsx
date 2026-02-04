@@ -56,6 +56,24 @@ export const MedicalHistoryPage: React.FC = () => {
         }));
     };
 
+    const handleRemoveRow = (index: number) => {
+        setDemographics(prev => ({
+            ...prev,
+            surgicalHistory: prev.surgicalHistory.filter((_, i) => i !== index)
+        }));
+    };
+
+    const handleInsertRow = (index: number) => {
+        setDemographics(prev => {
+            const newHistory = [...prev.surgicalHistory];
+            newHistory.splice(index + 1, 0, { id: Date.now().toString(), description: '' });
+            return {
+                ...prev,
+                surgicalHistory: newHistory
+            };
+        });
+    };
+
     const characteristicsList = [
         { key: 'allergy', label: 'Dị ứng', code: '01', notePlaceholder: '(Dị nguyên)' },
         { key: 'drugs', label: 'Ma túy', code: '02' },
@@ -211,14 +229,15 @@ export const MedicalHistoryPage: React.FC = () => {
                                     <thead className="bg-slate-50 text-slate-700 font-semibold border-b border-slate-200">
                                         <tr>
                                             <th className="px-3 py-2 text-center w-16 border-r border-slate-200">STT</th>
-                                            <th className="px-3 py-2">Mô tả</th>
+                                            <th className="px-3 py-2 border-r border-slate-200">Mô tả</th>
+                                            <th className="px-3 py-2 text-center w-24">Thao tác</th>
                                         </tr>
                                     </thead>
                                     <tbody className="divide-y divide-slate-200">
                                         {demographics.surgicalHistory.map((row, index) => (
-                                            <tr key={row.id}>
-                                                <td className="px-3 py-2 text-center text-slate-500 border-r border-slate-200 bg-slate-50">{index}</td>
-                                                <td className="p-0">
+                                            <tr key={row.id} className="group hover:bg-slate-50/50">
+                                                <td className="px-3 py-2 text-center text-slate-500 border-r border-slate-200 bg-slate-50">{index + 1}</td>
+                                                <td className="p-0 border-r border-slate-200">
                                                     <input
                                                         type="text"
                                                         value={row.description}
@@ -226,6 +245,22 @@ export const MedicalHistoryPage: React.FC = () => {
                                                         className="w-full px-3 py-2 border-none focus:ring-inset focus:ring-2 focus:ring-primary outline-none bg-transparent"
                                                         placeholder="Nhập thông tin phẫu thuật..."
                                                     />
+                                                </td>
+                                                <td className="px-3 py-2 flex items-center justify-center gap-1 opacity-100 transition-opacity">
+                                                    <button
+                                                        onClick={() => handleInsertRow(index)}
+                                                        className="p-1 rounded hover:bg-blue-100 text-blue-600 transition-colors"
+                                                        title="Chèn hàng dưới"
+                                                    >
+                                                        <span className="material-symbols-outlined text-[18px]">add</span>
+                                                    </button>
+                                                    <button
+                                                        onClick={() => handleRemoveRow(index)}
+                                                        className="p-1 rounded hover:bg-red-100 text-red-600 transition-colors"
+                                                        title="Xóa hàng"
+                                                    >
+                                                        <span className="material-symbols-outlined text-[18px]">delete</span>
+                                                    </button>
                                                 </td>
                                             </tr>
                                         ))}
