@@ -48,7 +48,7 @@ const defaultDemographics: PatientDemographics = {
     other: { checked: false, note: '' },
   },
   surgicalHistory: [
-    { id: '1', description: '' }
+    { id: '1', surgeryDate: '', procedure: '', notes: '' }
   ],
 };
 

@@ -33,7 +33,12 @@ export interface PatientDemographics {
     pipeTobacco: { checked: boolean; note: string };
     other: { checked: boolean; note: string };
   };
-  surgicalHistory: { id: string; description: string }[];
+  surgicalHistory: {
+    id: string;
+    surgeryDate: string;
+    procedure: string;
+    notes: string;
+  }[];
 }
 
 export interface ClinicalAssessment {

@@ -14,15 +14,7 @@ export const MedicalHistoryPage: React.FC = () => {
         }));
     };
 
-    const handleRiskChange = (key: keyof typeof demographics.comorbidities) => {
-        setDemographics(prev => ({
-            ...prev,
-            comorbidities: {
-                ...prev.comorbidities,
-                [key]: !prev.comorbidities[key]
-            }
-        }));
-    };
+    /* Risk Factors removed */
 
     const handleCharacteristicChange = (key: keyof typeof demographics.relatedCharacteristics, field: 'checked' | 'note', value: any) => {
         setDemographics(prev => ({
@@ -37,11 +29,11 @@ export const MedicalHistoryPage: React.FC = () => {
         }));
     };
 
-    const handleSurgicalHistoryChange = (id: string, value: string) => {
+    const handleSurgicalHistoryChange = (id: string, field: 'surgeryDate' | 'procedure' | 'notes', value: string) => {
         setDemographics(prev => ({
             ...prev,
             surgicalHistory: prev.surgicalHistory.map(row =>
-                row.id === id ? { ...row, description: value } : row
+                row.id === id ? { ...row, [field]: value } : row
             )
         }));
     };
@@ -51,7 +43,7 @@ export const MedicalHistoryPage: React.FC = () => {
             ...prev,
             surgicalHistory: [
                 ...prev.surgicalHistory,
-                { id: Date.now().toString(), description: '' }
+                { id: Date.now().toString(), surgeryDate: '', procedure: '', notes: '' }
             ]
         }));
     };
@@ -66,7 +58,7 @@ export const MedicalHistoryPage: React.FC = () => {
     const handleInsertRow = (index: number) => {
         setDemographics(prev => {
             const newHistory = [...prev.surgicalHistory];
-            newHistory.splice(index + 1, 0, { id: Date.now().toString(), description: '' });
+            newHistory.splice(index + 1, 0, { id: Date.now().toString(), surgeryDate: '', procedure: '', notes: '' });
             return {
                 ...prev,
                 surgicalHistory: newHistory
@@ -83,21 +75,15 @@ export const MedicalHistoryPage: React.FC = () => {
         { key: 'other', label: 'Khác', code: '06' },
     ];
 
-    const comorbidityLabels: Record<string, { label: string; detail: string }> = {
-        diabetes: { label: 'Tiểu đường', detail: 'HbA1c > 7% hoặc không kiểm soát' },
-        smoking: { label: 'Hút thuốc', detail: 'Hiện tại hoặc trong vòng 6 tháng qua' },
-        immunosuppression: { label: 'Suy giảm miễn dịch', detail: 'Yếu tố đáng kể' },
-        priorInfection: { label: 'Nhiễm trùng trước đó', detail: 'Yếu tố đáng kể' },
-        malnutrition: { label: 'Suy dinh dưỡng', detail: 'Yếu tố đáng kể' },
-        liverDisease: { label: 'Bệnh gan', detail: 'Yếu tố đáng kể' },
-    };
+    // Comorbidity labels removed
+
 
     return (
         <>
             <header className="flex-shrink-0 bg-white border-b border-slate-200 px-8 py-5 flex items-center justify-between z-10">
                 <div>
-                    <h1 className="text-2xl font-bold text-slate-900 tracking-tight">Tiền sử bệnh & Yếu tố nguy cơ</h1>
-                    <p className="text-slate-500 text-sm mt-1">Ghi nhận tiền sử bệnh, tiền sử phẫu thuật và các yếu tố nguy cơ.</p>
+                    <h1 className="text-2xl font-bold text-slate-900 tracking-tight">Tiền sử bệnh</h1>
+                    <p className="text-slate-500 text-sm mt-1">Ghi nhận tiền sử bệnh và tiền sử phẫu thuật.</p>
                 </div>
                 <div className="flex items-center gap-3">
                     <div className="h-2 w-32 bg-slate-100 rounded-full overflow-hidden">
@@ -190,30 +176,7 @@ export const MedicalHistoryPage: React.FC = () => {
                         </div>
                     </section>
 
-                    {/* Risk Factors */}
-                    <section className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
-                        <div className="px-6 py-4 border-b border-slate-100 flex items-center justify-between bg-slate-50/50">
-                            <h2 className="text-base font-bold text-slate-800 flex items-center gap-2">
-                                <span className="material-symbols-outlined text-primary text-[20px]">warning</span>
-                                Yếu tố nguy cơ & Cơ địa
-                            </h2>
-                        </div>
-                        <div className="p-6 grid grid-cols-1 md:grid-cols-2 gap-4">
-                            {Object.entries(demographics.comorbidities).map(([key, value]) => (
-                                <label key={key} className="flex items-start gap-3 p-3 rounded-lg border border-transparent hover:bg-slate-50 cursor-pointer transition-colors">
-                                    <input type="checkbox" checked={value} onChange={() => handleRiskChange(key as any)} className="w-5 h-5 rounded border-slate-300 accent-primary mt-0.5" />
-                                    <div className="flex flex-col">
-                                        <span className="text-sm font-medium text-slate-900 capitalize">
-                                            {comorbidityLabels[key]?.label || key}
-                                        </span>
-                                        <span className="text-xs text-slate-500">
-                                            {comorbidityLabels[key]?.detail}
-                                        </span>
-                                    </div>
-                                </label>
-                            ))}
-                        </div>
-                    </section>
+                    {/* Risk Factors removed */}
 
                     {/* Surgical History Table */}
                     <section className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
@@ -228,8 +191,10 @@ export const MedicalHistoryPage: React.FC = () => {
                                 <table className="w-full text-sm text-left">
                                     <thead className="bg-slate-50 text-slate-700 font-semibold border-b border-slate-200">
                                         <tr>
-                                            <th className="px-3 py-2 text-center w-16 border-r border-slate-200">STT</th>
-                                            <th className="px-3 py-2 border-r border-slate-200">Mô tả</th>
+                                            <th className="px-3 py-2 text-center w-16 border-r border-slate-200">Lần PT</th>
+                                            <th className="px-3 py-2 w-32 border-r border-slate-200">Thời gian</th>
+                                            <th className="px-3 py-2 border-r border-slate-200">Phương pháp phẫu thuật</th>
+                                            <th className="px-3 py-2 border-r border-slate-200">Ghi chú</th>
                                             <th className="px-3 py-2 text-center w-24">Thao tác</th>
                                         </tr>
                                     </thead>
@@ -240,10 +205,28 @@ export const MedicalHistoryPage: React.FC = () => {
                                                 <td className="p-0 border-r border-slate-200">
                                                     <input
                                                         type="text"
-                                                        value={row.description}
-                                                        onChange={(e) => handleSurgicalHistoryChange(row.id, e.target.value)}
+                                                        value={row.surgeryDate}
+                                                        onChange={(e) => handleSurgicalHistoryChange(row.id, 'surgeryDate', e.target.value)}
                                                         className="w-full px-3 py-2 border-none focus:ring-inset focus:ring-2 focus:ring-primary outline-none bg-transparent"
-                                                        placeholder="Nhập thông tin phẫu thuật..."
+                                                        placeholder="Năm/Ngày"
+                                                    />
+                                                </td>
+                                                <td className="p-0 border-r border-slate-200">
+                                                    <input
+                                                        type="text"
+                                                        value={row.procedure}
+                                                        onChange={(e) => handleSurgicalHistoryChange(row.id, 'procedure', e.target.value)}
+                                                        className="w-full px-3 py-2 border-none focus:ring-inset focus:ring-2 focus:ring-primary outline-none bg-transparent"
+                                                        placeholder="Nhập phương pháp..."
+                                                    />
+                                                </td>
+                                                <td className="p-0 border-r border-slate-200">
+                                                    <input
+                                                        type="text"
+                                                        value={row.notes}
+                                                        onChange={(e) => handleSurgicalHistoryChange(row.id, 'notes', e.target.value)}
+                                                        className="w-full px-3 py-2 border-none focus:ring-inset focus:ring-2 focus:ring-primary outline-none bg-transparent"
+                                                        placeholder="Ghi chú thêm..."
                                                     />
                                                 </td>
                                                 <td className="px-3 py-2 flex items-center justify-center gap-1 opacity-100 transition-opacity">
