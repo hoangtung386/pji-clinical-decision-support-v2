@@ -329,17 +329,8 @@ export const ClinicalAssessmentPage: React.FC = () => {
                               ) : null;
                             })()}
                           </td>
-                          <td className="px-4 py-2 border-r border-slate-200 p-0">
-                            <input
-                              type="text"
-                              value={test.normalRange}
-                              onChange={(e) => {
-                                const newTests = [...(clinical.bloodTests || [])];
-                                newTests[index].normalRange = e.target.value;
-                                setClinical(prev => ({ ...prev, bloodTests: newTests }));
-                              }}
-                              className="w-full h-full px-4 py-2 border-none bg-transparent focus:ring-inset focus:ring-2 focus:ring-primary outline-none"
-                            />
+                          <td className="px-4 py-2 border-r border-slate-200 text-slate-700">
+                            {test.normalRange}
                           </td>
                           <td className="px-4 py-2 text-slate-500 bg-slate-50/30">{test.unit}</td>
                         </tr>
@@ -411,17 +402,8 @@ export const ClinicalAssessmentPage: React.FC = () => {
                               />
                             )}
                           </td>
-                          <td className="px-4 py-2 border-r border-slate-200 p-0">
-                            <input
-                              type="text"
-                              value={test.normalRange}
-                              onChange={(e) => {
-                                const newTests = [...(clinical.fluidAnalysis || [])];
-                                newTests[index].normalRange = e.target.value;
-                                setClinical(prev => ({ ...prev, fluidAnalysis: newTests }));
-                              }}
-                              className="w-full h-full px-4 py-2 border-none bg-transparent focus:ring-inset focus:ring-2 focus:ring-primary outline-none"
-                            />
+                          <td className="px-4 py-2 border-r border-slate-200 text-slate-700">
+                            {test.normalRange}
                           </td>
                           <td className="px-4 py-2 text-slate-500 bg-slate-50/30">{test.unit}</td>
                         </tr>
