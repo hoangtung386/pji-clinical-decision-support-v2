@@ -329,7 +329,7 @@ export const ClinicalAssessmentPage: React.FC = () => {
                           <td className="px-4 py-2 border-r border-slate-200 p-0">
                             {test.name === 'Nhuộm Gram' ? (
                               <div className="flex flex-wrap gap-1 p-2">
-                                {['1+', '2+', '3+', '4+'].map((opt) => (
+                                {['Gram Dương', 'Gram Âm', 'Âm tính'].map((opt) => (
                                   <label key={opt} className="inline-flex items-center gap-1 cursor-pointer bg-slate-100 px-2 py-1 rounded border border-slate-200 hover:bg-white transition-colors">
                                     <input
                                       type="checkbox"

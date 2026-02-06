@@ -74,6 +74,11 @@ const defaultClinical: ClinicalAssessment = {
     { id: 'bt_5', name: 'D-Dimer', result: '', normalRange: '', unit: 'μg/mL' },
     { id: 'bt_6', name: 'Alpha Defensin', result: '', normalRange: '', unit: 'μg/mL' },
     { id: 'bt_7', name: 'Leukocyte Esterase', result: '', normalRange: '', unit: 'cells/μL' },
+    { id: 'bt_8', name: 'Định lượng Glucose', result: '', normalRange: '4.1 - 5.6', unit: 'mmol/l' },
+    { id: 'bt_9', name: 'Định lượng Urê máu', result: '', normalRange: '2.8 - 7.2', unit: 'mmol/l' },
+    { id: 'bt_10', name: 'Định lượng Creatinin', result: '', normalRange: '59 - 104', unit: 'µmol/l' },
+    { id: 'bt_11', name: 'Định lượng Protein toàn phần', result: '', normalRange: '66 - 83', unit: 'g/L' },
+    { id: 'bt_12', name: 'Điện giải đồ (Na, K, Cl)', result: '', normalRange: '', unit: 'mmol/L' },
   ],
   fluidAnalysis: [
     { id: 'fa_1', name: 'Bạch cầu', result: '', normalRange: '', unit: '' },
