@@ -84,6 +84,7 @@ const defaultClinical: ClinicalAssessment = {
     { id: 'bt_13', name: 'K+', result: '', normalRange: '3.5 - 5.0', unit: 'mmol/L' },
     { id: 'bt_14', name: 'Cl-', result: '', normalRange: '', unit: 'mmol/L' },
     { id: 'bt_15', name: 'Định lượng Canxi toàn phần', result: '', normalRange: '2.2 - 2.65', unit: 'mmol/L' },
+    { id: 'bt_18', name: 'Định lượng HbA1c', result: '', normalRange: '4 - 6.2', unit: '%' },
   ],
   fluidAnalysis: [
     { id: 'fa_1', name: 'Bạch cầu', result: '', normalRange: '', unit: '' },
