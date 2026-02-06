@@ -67,6 +67,41 @@ export const ClinicalAssessmentPage: React.FC = () => {
   }
 
 
+  const getTestStatus = (result: string, normalRange: string) => {
+    if (!result || !normalRange) return null;
+    const resVal = parseFloat(result);
+    if (isNaN(resVal)) return null;
+
+    // Handle "min - max"
+    if (normalRange.includes('-')) {
+      const parts = normalRange.split('-').map(p => parseFloat(p.trim()));
+      if (parts.length === 2 && !isNaN(parts[0]) && !isNaN(parts[1])) {
+        if (resVal < parts[0]) return 'L';
+        if (resVal > parts[1]) return 'H';
+        return null;
+      }
+    }
+
+    // Handle "< max"
+    if (normalRange.trim().startsWith('<')) {
+      const max = parseFloat(normalRange.replace('<', '').trim());
+      if (!isNaN(max) && resVal > max) return 'H';
+    }
+
+    // Handle "> min"
+    if (normalRange.trim().startsWith('>')) {
+      const min = parseFloat(normalRange.replace('>', '').trim());
+      if (!isNaN(min) && resVal < min) return 'L';
+    }
+
+    return null;
+  };
+
+  const statusColors = {
+    'H': 'text-red-600 font-bold',
+    'L': 'text-yellow-600 font-bold',
+  };
+
   return (
     <>
       <header className="flex-shrink-0 bg-white border-b border-slate-200 px-8 py-5 flex items-center justify-between z-10">
@@ -263,6 +298,7 @@ export const ClinicalAssessmentPage: React.FC = () => {
                       <tr>
                         <th className="px-4 py-3 border-r border-slate-200">Tên xét nghiệm</th>
                         <th className="px-4 py-3 border-r border-slate-200 w-32">Kết quả</th>
+                        <th className="px-4 py-3 border-r border-slate-200 w-16 text-center">Ghi chú</th>
                         <th className="px-4 py-3 border-r border-slate-200 w-32">Chỉ số BT</th>
                         <th className="px-4 py-3">Đơn vị</th>
                       </tr>
@@ -282,6 +318,16 @@ export const ClinicalAssessmentPage: React.FC = () => {
                               }}
                               className="w-full h-full px-4 py-2 border-none bg-transparent focus:ring-inset focus:ring-2 focus:ring-primary outline-none"
                             />
+                          </td>
+                          <td className="px-4 py-2 border-r border-slate-200 text-center font-bold">
+                            {(() => {
+                              const status = getTestStatus(test.result, test.normalRange);
+                              return status ? (
+                                <span className={status === 'H' ? 'text-red-600 font-bold' : 'text-yellow-600 font-bold'}>
+                                  {status}
+                                </span>
+                              ) : null;
+                            })()}
                           </td>
                           <td className="px-4 py-2 border-r border-slate-200 p-0">
                             <input
