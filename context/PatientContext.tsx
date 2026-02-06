@@ -87,9 +87,9 @@ const defaultClinical: ClinicalAssessment = {
     { id: 'bt_18', name: 'Định lượng HbA1c', result: '', normalRange: '4 - 6.2', unit: '%' },
   ],
   fluidAnalysis: [
-    { id: 'fa_1', name: 'Bạch cầu', result: '', normalRange: '', unit: '' },
+    { id: 'fa_1', name: 'Bạch cầu', result: '', normalRange: '', unit: 'Tế bào/Vi trường' },
     { id: 'fa_2', name: '%NEUT', result: '', normalRange: '', unit: '%' },
-    { id: 'fa_3', name: 'CRP', result: '', normalRange: '', unit: '' },
+    { id: 'fa_3', name: 'Định lượng CRP', result: '', normalRange: '', unit: 'mg/l' },
     { id: 'fa_4', name: 'Cấy khuẩn', result: '', normalRange: '', unit: 'CFU/mL' },
     { id: 'fa_5', name: 'Nhuộm Gram', result: '', normalRange: '', unit: '' },
   ],
