@@ -63,12 +63,6 @@ export interface ClinicalAssessment {
       name: string;
     }[];
   };
-  synovial: {
-    wbc: number;
-    pmn: number;
-    alphaDefensin: 'Positive' | 'Negative' | 'Trace';
-    leukocyteEsterase: 'Negative' | '1+' | '2+' | '3+';
-  };
   bloodTests: {
     id: string;
     name: string;

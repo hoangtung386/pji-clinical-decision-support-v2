@@ -66,7 +66,6 @@ const defaultClinical: ClinicalAssessment = {
     description: '',
     images: []
   },
-  synovial: { wbc: 3200, pmn: 82, alphaDefensin: 'Trace', leukocyteEsterase: '1+' },
   bloodTests: [
     { id: 'bt_1', name: 'Bạch cầu', result: '', normalRange: '', unit: 'Tế bào/Vi trường' },
     { id: 'bt_2', name: '%NEUT', result: '', normalRange: '', unit: '%' },

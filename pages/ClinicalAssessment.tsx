@@ -21,37 +21,7 @@ export const ClinicalAssessmentPage: React.FC = () => {
     }
 
     // Minor Criteria Scoring
-    // 1. Serology (Mocked as if we have access to high ESR/CRP)
-    // Assume high ESR/CRP based on mock lab data context (adding points for demo purposes)
-    score += 2; // CRP > 10
-    reasoning.push('CRP tăng cao (>10 mg/L) [+2]');
-
-    // 2. Synovial WBC
-    // Acute threshold > 10,000, Chronic > 3,000
-    const wbcThreshold = demographics.isAcute ? 10000 : 3000;
-    if (clinical.synovial.wbc > wbcThreshold) {
-      score += 3;
-      reasoning.push(`Bạch cầu dịch khớp > ${wbcThreshold} [+3]`);
-    }
-
-    // 3. PMN %
-    const pmnThreshold = demographics.isAcute ? 90 : 80; // Slide 13 ref says >90 (acute) / >70 or 80 (chronic) usually
-    if (clinical.synovial.pmn > pmnThreshold) {
-      score += 2;
-      reasoning.push(`% Bạch cầu đa nhân > ${pmnThreshold}% [+2]`);
-    }
-
-    // 4. Alpha Defensin (simplified)
-    if (clinical.synovial.alphaDefensin === 'Positive') {
-      score += 3;
-      reasoning.push('Alpha-defensin Dương tính [+3]');
-    }
-
-    // 5. LE
-    if (clinical.synovial.leukocyteEsterase === '2+' || clinical.synovial.leukocyteEsterase === '3+') {
-      score += 3;
-      reasoning.push('Leukocyte Esterase ++ [+3]');
-    }
+    // Note: Scoring logic simplified after removal of synovial fluid aspiration section
 
     // Status Determination
     let status: 'Infected' | 'Inconclusive' | 'Not Infected' = 'Not Infected';
@@ -76,7 +46,7 @@ export const ClinicalAssessmentPage: React.FC = () => {
       diagnosis: { score, probability, status, reasoning }
     }));
 
-  }, [clinical.symptoms, clinical.major, clinical.synovial, demographics.isAcute, setClinical]);
+  }, [clinical.symptoms, clinical.major, demographics.isAcute, setClinical]);
 
   const getStatusColor = (status: string) => {
     if (status === 'Infected') return 'text-danger';
