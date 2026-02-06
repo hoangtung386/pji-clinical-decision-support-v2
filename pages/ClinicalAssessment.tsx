@@ -385,40 +385,7 @@ export const ClinicalAssessmentPage: React.FC = () => {
                 </div>
               </section>
 
-              {/* 5. Fluid Aspiration */}
-              <section className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
-                <div className="bg-slate-50 px-6 py-4 border-b border-slate-200 flex justify-between items-center">
-                  <h3 className="text-slate-900 font-bold text-lg flex items-center gap-2">
-                    <span className="flex items-center justify-center w-6 h-6 rounded-full bg-primary/10 text-primary text-xs font-bold">5</span>
-                    Chọc hút dịch khớp
-                  </h3>
-                </div>
-                <div className="p-6 grid grid-cols-1 sm:grid-cols-2 gap-6">
-                  <div className="flex flex-col gap-1.5">
-                    <label className="text-xs font-bold text-slate-500 uppercase tracking-wide">Bạch cầu dịch khớp</label>
-                    <div className="relative">
-                      <input type="number" value={clinical.synovial.wbc} onChange={(e) => setClinical(p => ({ ...p, synovial: { ...p.synovial, wbc: parseInt(e.target.value) } }))} className="w-full rounded-lg border-slate-200 text-slate-900 font-mono text-lg py-2.5 pl-3 pr-12 border focus:ring-primary focus:border-primary shadow-sm" />
-                      <span className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm font-medium">cells/µL</span>
-                    </div>
-                  </div>
-                  <div className="flex flex-col gap-1.5">
-                    <label className="text-xs font-bold text-slate-500 uppercase tracking-wide">% Bạch cầu đa nhân</label>
-                    <div className="relative">
-                      <input type="number" value={clinical.synovial.pmn} onChange={(e) => setClinical(p => ({ ...p, synovial: { ...p.synovial, pmn: parseInt(e.target.value) } }))} className="w-full rounded-lg border-slate-200 text-slate-900 font-mono text-lg py-2.5 pl-3 pr-12 border focus:ring-primary focus:border-primary shadow-sm" />
-                      <span className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm font-medium">%</span>
-                    </div>
-                  </div>
-                  <div className="flex flex-col gap-1.5">
-                    <label className="text-xs font-bold text-slate-500 uppercase tracking-wide">Leukocyte Esterase</label>
-                    <select value={clinical.synovial.leukocyteEsterase} onChange={(e) => setClinical(p => ({ ...p, synovial: { ...p.synovial, leukocyteEsterase: e.target.value as any } }))} className="w-full rounded-lg border-slate-200 text-slate-900 text-base py-2.5 border bg-white">
-                      <option>Negative</option>
-                      <option>1+</option>
-                      <option>2+</option>
-                      <option>3+</option>
-                    </select>
-                  </div>
-                </div>
-              </section>
+
             </div>
 
             {/* RIGHT COLUMN: AI DIAGNOSIS */}
