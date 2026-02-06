@@ -7,6 +7,21 @@ export const ClinicalAssessmentPage: React.FC = () => {
   const { demographics, setDemographics, clinical, setClinical } = usePatient();
 
   // Logic: ICM 2018 Scoring
+  // Logic: ICM 2018 Scoring
+  useEffect(() => {
+    if (demographics.surgeryDate && demographics.symptomDate) {
+      const surgery = new Date(demographics.surgeryDate);
+      const symptom = new Date(demographics.symptomDate);
+      const diffTime = Math.abs(symptom.getTime() - surgery.getTime());
+      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+      const isAcute = diffDays < 21; // 3 weeks
+      if (demographics.isAcute !== isAcute) {
+        setDemographics(prev => ({ ...prev, isAcute }));
+      }
+    }
+  }, [demographics.surgeryDate, demographics.symptomDate, demographics.isAcute, setDemographics]);
+
   useEffect(() => {
     let score = 0;
     const reasoning: string[] = [];
