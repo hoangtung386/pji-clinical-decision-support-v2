@@ -78,7 +78,10 @@ const defaultClinical: ClinicalAssessment = {
     { id: 'bt_9', name: 'Định lượng Urê máu', result: '', normalRange: '2.8 - 7.2', unit: 'mmol/l' },
     { id: 'bt_10', name: 'Định lượng Creatinin', result: '', normalRange: '59 - 104', unit: 'µmol/l' },
     { id: 'bt_11', name: 'Định lượng Protein toàn phần', result: '', normalRange: '66 - 83', unit: 'g/L' },
-    { id: 'bt_12', name: 'Điện giải đồ (Na, K, Cl)', result: '', normalRange: '', unit: 'mmol/L' },
+    { id: 'bt_12', name: 'Na+', result: '', normalRange: '135 - 145', unit: 'mmol/L' },
+    { id: 'bt_13', name: 'K+', result: '', normalRange: '3.5 - 5.0', unit: 'mmol/L' },
+    { id: 'bt_14', name: 'Cl-', result: '', normalRange: '', unit: 'mmol/L' },
+    { id: 'bt_15', name: 'Định lượng Canxi toàn phần', result: '', normalRange: '2.2 - 2.65', unit: 'mmol/L' },
   ],
   fluidAnalysis: [
     { id: 'fa_1', name: 'Bạch cầu', result: '', normalRange: '', unit: '' },
