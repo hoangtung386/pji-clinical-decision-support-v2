@@ -27,10 +27,34 @@ export const ClinicalAssessmentPage: React.FC = () => {
     const reasoning: string[] = [];
 
     // Major Criteria (Immediate Infection)
+    // 1. Sinus tract or 2 positive cultures (existing criteria)
     if (clinical.symptoms.sinusTract || clinical.major.twoPositiveCultures) {
       setClinical(prev => ({
         ...prev,
         diagnosis: { score: 99, probability: 100, status: 'Infected', reasoning: ['Tiêu chuẩn chính: Đường rò hoặc 2 mẫu cấy dương tính'] }
+      }));
+      return;
+    }
+
+    // 2. Check bacterial culture samples (≥2 positive samples with bacteria name)
+    const positiveCultures = clinical.cultureSamples?.filter(
+      sample => sample.status === 'positive' && sample.bacteriaName.trim() !== ''
+    ) || [];
+
+    if (positiveCultures.length >= 2) {
+      const uniqueBacteria = [...new Set(positiveCultures.map(s => s.bacteriaName))];
+      const bacteriaList = uniqueBacteria.join(', ');
+      setClinical(prev => ({
+        ...prev,
+        diagnosis: {
+          score: 99,
+          probability: 95,
+          status: 'Infected',
+          reasoning: [
+            `Tiêu chuẩn chính: ${positiveCultures.length} mẫu cấy khuẩn dương tính`,
+            `Vi khuẩn: ${bacteriaList}`
+          ]
+        }
       }));
       return;
     }
@@ -61,7 +85,7 @@ export const ClinicalAssessmentPage: React.FC = () => {
       diagnosis: { score, probability, status, reasoning }
     }));
 
-  }, [clinical.symptoms, clinical.major, demographics.isAcute, setClinical]);
+  }, [clinical.symptoms, clinical.major, clinical.cultureSamples, demographics.isAcute, setClinical]);
 
   const getStatusColor = (status: string) => {
     if (status === 'Infected') return 'text-danger';
