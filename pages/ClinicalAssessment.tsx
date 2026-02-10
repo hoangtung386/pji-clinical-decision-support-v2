@@ -326,15 +326,18 @@ export const ClinicalAssessmentPage: React.FC = () => {
               <section className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
                 <div className="bg-slate-50 px-6 py-4 border-b border-slate-200">
                   <h3 className="text-slate-900 font-bold text-lg flex items-center gap-2">
-                    <span className="flex items-center justify-center w-6 h-6 rounded-full bg-primary/10 text-primary text-xs font-bold">3</span>
+                    <span className="flex items-center justify-center w-6 h-6 rounded-full bg-primary/10 text-primary text-xs font-bold">2</span>
                     Xét nghiệm chẩn đoán PJI
                   </h3>
                 </div>
 
-                {/* 3.1 Hematology Tests */}
+                {/* 2.1 Hematology Tests */}
                 <div className="border-b border-slate-200">
-                  <div className="bg-slate-100 px-6 py-2">
-                    <h4 className="text-slate-800 font-semibold text-sm">Xét nghiệm huyết học</h4>
+                  <div className="bg-gradient-to-r from-blue-50 to-slate-50 px-6 py-3 border-b border-blue-100">
+                    <h4 className="text-blue-900 font-bold text-base flex items-center gap-2">
+                      <span className="flex items-center justify-center w-5 h-5 rounded bg-blue-500/10 text-blue-600 text-xs font-bold">1</span>
+                      Xét nghiệm huyết học
+                    </h4>
                   </div>
                   <div className="overflow-x-auto">
                     <table className="w-full text-sm text-left text-slate-700">
@@ -382,10 +385,13 @@ export const ClinicalAssessmentPage: React.FC = () => {
                   </div>
                 </div>
 
-                {/* 3.2 Biochemistry Tests */}
+                {/* 2.2 Biochemistry Tests */}
                 <div className="border-b border-slate-200">
-                  <div className="bg-slate-100 px-6 py-2">
-                    <h4 className="text-slate-800 font-semibold text-sm">Xét nghiệm sinh hoá</h4>
+                  <div className="bg-gradient-to-r from-green-50 to-slate-50 px-6 py-3 border-b border-green-100">
+                    <h4 className="text-green-900 font-bold text-base flex items-center gap-2">
+                      <span className="flex items-center justify-center w-5 h-5 rounded bg-green-500/10 text-green-600 text-xs font-bold">2</span>
+                      Xét nghiệm sinh hoá
+                    </h4>
                   </div>
                   <div className="overflow-x-auto">
                     <table className="w-full text-sm text-left text-slate-700">
@@ -433,10 +439,13 @@ export const ClinicalAssessmentPage: React.FC = () => {
                   </div>
                 </div>
 
-                {/* 3.3 Fluid Tests */}
+                {/* 2.3 Fluid Tests */}
                 <div className="border-b border-slate-200">
-                  <div className="bg-slate-100 px-6 py-2">
-                    <h4 className="text-slate-800 font-semibold text-sm">Xét nghiệm dịch</h4>
+                  <div className="bg-gradient-to-r from-purple-50 to-slate-50 px-6 py-3 border-b border-purple-100">
+                    <h4 className="text-purple-900 font-bold text-base flex items-center gap-2">
+                      <span className="flex items-center justify-center w-5 h-5 rounded bg-purple-500/10 text-purple-600 text-xs font-bold">3</span>
+                      Xét nghiệm dịch
+                    </h4>
                   </div>
                   <div className="overflow-x-auto">
                     <table className="w-full text-sm text-left text-slate-700">
@@ -484,10 +493,13 @@ export const ClinicalAssessmentPage: React.FC = () => {
                   </div>
                 </div>
 
-                {/* 3.4 Cấy khuẩn & Nhuộm Gram */}
+                {/* 2.4 Cấy khuẩn & Nhuộm Gram */}
                 <div>
-                  <div className="bg-slate-100 px-6 py-2">
-                    <h4 className="text-slate-800 font-semibold text-sm">Cấy khuẩn & Nhuộm Gram</h4>
+                  <div className="bg-gradient-to-r from-amber-50 to-slate-50 px-6 py-3 border-b border-amber-100">
+                    <h4 className="text-amber-900 font-bold text-base flex items-center gap-2">
+                      <span className="flex items-center justify-center w-5 h-5 rounded bg-amber-500/10 text-amber-600 text-xs font-bold">4</span>
+                      Cấy khuẩn & Nhuộm Gram
+                    </h4>
                   </div>
                   <div className="overflow-x-auto">
                     <table className="w-full text-sm text-left text-slate-700">
@@ -605,11 +617,11 @@ export const ClinicalAssessmentPage: React.FC = () => {
                 </div>
               </section>
 
-              {/* 4. Other Tests */}
+              {/* 3. Other Tests */}
               <section className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
                 <div className="bg-slate-50 px-6 py-4 border-b border-slate-200">
                   <h3 className="text-slate-900 font-bold text-lg flex items-center gap-2">
-                    <span className="flex items-center justify-center w-6 h-6 rounded-full bg-primary/10 text-primary text-xs font-bold">4</span>
+                    <span className="flex items-center justify-center w-6 h-6 rounded-full bg-primary/10 text-primary text-xs font-bold">3</span>
                     Xét nghiệm khác
                   </h3>
                 </div>
@@ -659,6 +671,97 @@ export const ClinicalAssessmentPage: React.FC = () => {
                 </div>
               </section>
 
+              {/* 4. Diagnostic Imaging */}
+              <section className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+                <div className="bg-slate-50 px-6 py-4 border-b border-slate-200">
+                  <h3 className="text-slate-900 font-bold text-lg flex items-center gap-2">
+                    <span className="flex items-center justify-center w-6 h-6 rounded-full bg-primary/10 text-primary text-xs font-bold">4</span>
+                    Chuẩn đoán hình ảnh
+                  </h3>
+                </div>
+                <div className="p-6 flex flex-col gap-6">
+                  {/* Description */}
+                  <div className="flex flex-col gap-2">
+                    <label className="text-sm font-semibold text-slate-700">Mô tả hình ảnh</label>
+                    <textarea
+                      className="w-full rounded-lg border-slate-200 min-h-[100px] p-3 text-sm focus:ring-primary focus:border-primary"
+                      placeholder="Nhập mô tả chi tiết về kết quả chẩn đoán hình ảnh..."
+                      value={clinical.imaging?.description || ''}
+                      onChange={(e) => setClinical(prev => ({
+                        ...prev,
+                        imaging: { ...prev.imaging, description: e.target.value }
+                      }))}
+                    ></textarea>
+                  </div>
+
+                  {/* Image Upload */}
+                  <div className="flex flex-col gap-2">
+                    <label className="text-sm font-semibold text-slate-700">Hình ảnh đính kèm</label>
+                    <div className="grid grid-cols-4 gap-4">
+                      {clinical.imaging?.images?.map((image, index) => (
+                        <div key={image.id} className="relative group">
+                          <img
+                            src={image.url}
+                            alt={image.name}
+                            className="w-full h-32 object-cover rounded-lg border border-slate-200"
+                          />
+                          <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center rounded-lg">
+                            <span className="text-white text-xs px-2 py-1 bg-black/60 rounded">{image.type}</span>
+                          </div>
+                          <button
+                            onClick={() => {
+                              setClinical(prev => ({
+                                ...prev,
+                                imaging: {
+                                  ...prev.imaging,
+                                  images: prev.imaging.images.filter((_, i) => i !== index)
+                                }
+                              }));
+                            }}
+                            className="absolute -top-2 -right-2 w-6 h-6 bg-red-500 text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-600 flex items-center justify-center"
+                          >
+                            <span className="material-symbols-outlined text-[14px]">close</span>
+                          </button>
+                        </div>
+                      ))}
+
+                      <label className="flex flex-col items-center justify-center border-2 border-dashed border-slate-300 rounded-lg hover:bg-slate-50 cursor-pointer transition-colors aspect-square">
+                        <span className="material-symbols-outlined text-slate-400 text-3xl mb-1">add_photo_alternate</span>
+                        <span className="text-xs text-slate-500 font-medium">Thêm ảnh mới</span>
+                        <input
+                          type="file"
+                          accept="image/*"
+                          className="hidden"
+                          onChange={(e) => {
+                            if (e.target.files && e.target.files[0]) {
+                              const file = e.target.files[0];
+                              const type = prompt('Chọn loại hình ảnh (X-quang, CT, Siêu âm):', 'X-quang');
+                              if (type) {
+                                const validTypes = ['X-quang', 'CT', 'Siêu âm'];
+                                const selectedType = validTypes.includes(type) ? type as any : 'Other';
+                                const newImage = {
+                                  id: Math.random().toString(36).substr(2, 9),
+                                  url: URL.createObjectURL(file), // Note: Using ObjectURL for demo
+                                  type: selectedType,
+                                  name: file.name
+                                };
+                                setClinical(prev => ({
+                                  ...prev,
+                                  imaging: {
+                                    ...prev.imaging,
+                                    images: [...prev.imaging.images, newImage]
+                                  }
+                                }));
+                              }
+                              e.target.value = ''; // Reset input
+                            }
+                          }}
+                        />
+                      </label>
+                    </div>
+                  </div>
+                </div>
+              </section>
 
             </div>
 
