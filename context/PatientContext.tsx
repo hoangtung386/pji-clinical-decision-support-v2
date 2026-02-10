@@ -93,6 +93,13 @@ const defaultClinical: ClinicalAssessment = {
     { id: 'fa_4', name: 'Cấy khuẩn', result: '', normalRange: '', unit: 'CFU/mL' },
     { id: 'fa_5', name: 'Nhuộm Gram', result: '', normalRange: '', unit: '' },
   ],
+  cultureSamples: [
+    { sampleNumber: 1, status: 'negative', bacteriaName: '' },
+    { sampleNumber: 2, status: 'negative', bacteriaName: '' },
+    { sampleNumber: 3, status: 'negative', bacteriaName: '' },
+    { sampleNumber: 4, status: 'negative', bacteriaName: '' },
+    { sampleNumber: 5, status: 'negative', bacteriaName: '' },
+  ],
   diagnosis: { score: 0, probability: 0, status: 'Inconclusive', reasoning: [] },
 };
 

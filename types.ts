@@ -40,6 +40,12 @@ export interface PatientDemographics {
   }[];
 }
 
+export interface CultureSample {
+  sampleNumber: number;
+  status: 'negative' | 'positive';
+  bacteriaName: string;
+}
+
 export interface ClinicalAssessment {
   major: {
     sinusTract: boolean;
@@ -77,6 +83,7 @@ export interface ClinicalAssessment {
     normalRange: string;
     unit: string;
   }[];
+  cultureSamples: CultureSample[];
   diagnosis: {
     score: number;
     probability: number;

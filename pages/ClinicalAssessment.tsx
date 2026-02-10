@@ -404,6 +404,59 @@ export const ClinicalAssessmentPage: React.FC = () => {
                                   </label>
                                 ))}
                               </div>
+                            ) : test.name === 'Cấy khuẩn' ? (
+                              <div className="p-2 space-y-2">
+                                {clinical.cultureSamples?.map((sample, sampleIdx) => (
+                                  <div key={sample.sampleNumber} className="flex items-center gap-2 text-xs">
+                                    <span className="font-medium text-slate-600 w-14">Mẫu {sample.sampleNumber}:</span>
+                                    <label className="inline-flex items-center gap-1 cursor-pointer">
+                                      <input
+                                        type="radio"
+                                        name={`culture-${sampleIdx}`}
+                                        checked={sample.status === 'negative'}
+                                        onChange={() => {
+                                          const newSamples = [...clinical.cultureSamples];
+                                          newSamples[sampleIdx] = {
+                                            ...newSamples[sampleIdx],
+                                            status: 'negative',
+                                            bacteriaName: ''
+                                          };
+                                          setClinical(prev => ({ ...prev, cultureSamples: newSamples }));
+                                        }}
+                                        className="w-3 h-3 accent-primary"
+                                      />
+                                      <span className="text-slate-700">Âm tính</span>
+                                    </label>
+                                    <label className="inline-flex items-center gap-1 cursor-pointer">
+                                      <input
+                                        type="radio"
+                                        name={`culture-${sampleIdx}`}
+                                        checked={sample.status === 'positive'}
+                                        onChange={() => {
+                                          const newSamples = [...clinical.cultureSamples];
+                                          newSamples[sampleIdx] = { ...newSamples[sampleIdx], status: 'positive' };
+                                          setClinical(prev => ({ ...prev, cultureSamples: newSamples }));
+                                        }}
+                                        className="w-3 h-3 accent-primary"
+                                      />
+                                      <span className="text-slate-700">Dương tính</span>
+                                    </label>
+                                    {sample.status === 'positive' && (
+                                      <input
+                                        type="text"
+                                        value={sample.bacteriaName}
+                                        onChange={(e) => {
+                                          const newSamples = [...clinical.cultureSamples];
+                                          newSamples[sampleIdx] = { ...newSamples[sampleIdx], bacteriaName: e.target.value };
+                                          setClinical(prev => ({ ...prev, cultureSamples: newSamples }));
+                                        }}
+                                        placeholder="Tên vi khuẩn..."
+                                        className="flex-1 px-2 py-1 border border-slate-300 rounded text-xs focus:ring-1 focus:ring-primary focus:border-primary outline-none"
+                                      />
+                                    )}
+                                  </div>
+                                ))}
+                              </div>
                             ) : (
                               <input
                                 type="text"
