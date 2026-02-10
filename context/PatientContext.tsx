@@ -73,7 +73,7 @@ const defaultClinical: ClinicalAssessment = {
     { id: 'bt_4', name: 'Định lượng CRP', result: '', normalRange: '0 - 5', unit: 'mg/l' },
     { id: 'bt_5', name: 'D-Dimer', result: '', normalRange: '< 0.5', unit: 'μg/mL' },
     { id: 'bt_6', name: 'Alpha Defensin', result: '', normalRange: '< 5.2', unit: 'μg/mL' },
-    { id: 'bt_7', name: 'Leukocyte Esterase', result: '', normalRange: '< 200', unit: 'cells/μL' },
+    { id: 'bt_7', name: 'Leukocyte Esterase', result: '', normalRange: '', unit: 'cells/μL' },
     { id: 'bt_8', name: 'Định lượng Glucose', result: '', normalRange: '4.1 - 5.6', unit: 'mmol/l' },
     { id: 'bt_9', name: 'Định lượng Urê máu', result: '', normalRange: '2.8 - 7.2', unit: 'mmol/l' },
     { id: 'bt_10', name: 'Định lượng Creatinin', result: '', normalRange: '59 - 104', unit: 'µmol/l' },
