@@ -322,17 +322,299 @@ export const ClinicalAssessmentPage: React.FC = () => {
 
 
 
-              {/* 3. Blood Tests */}
+              {/* 3. PJI Diagnostic Tests */}
               <section className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
                 <div className="bg-slate-50 px-6 py-4 border-b border-slate-200">
                   <h3 className="text-slate-900 font-bold text-lg flex items-center gap-2">
                     <span className="flex items-center justify-center w-6 h-6 rounded-full bg-primary/10 text-primary text-xs font-bold">3</span>
-                    Xét nghiệm máu
+                    Xét nghiệm chẩn đoán PJI
+                  </h3>
+                </div>
+
+                {/* 3.1 Hematology Tests */}
+                <div className="border-b border-slate-200">
+                  <div className="bg-slate-100 px-6 py-2">
+                    <h4 className="text-slate-800 font-semibold text-sm">Xét nghiệm huyết học</h4>
+                  </div>
+                  <div className="overflow-x-auto">
+                    <table className="w-full text-sm text-left text-slate-700">
+                      <thead className="bg-slate-50 text-slate-700 font-bold border-b border-slate-200">
+                        <tr>
+                          <th className="px-4 py-3 border-r border-slate-200">Tên xét nghiệm</th>
+                          <th className="px-4 py-3 border-r border-slate-200 w-32">Kết quả</th>
+                          <th className="px-4 py-3 border-r border-slate-200 w-16 text-center">Ghi chú</th>
+                          <th className="px-4 py-3 border-r border-slate-200 w-32">Chỉ số BT</th>
+                          <th className="px-4 py-3">Đơn vị</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-slate-200">
+                        {clinical.hematologyTests?.map((test, index) => (
+                          <tr key={test.id} className="hover:bg-slate-50/50">
+                            <td className="px-4 py-2 font-medium text-slate-900 border-r border-slate-200">{test.name}</td>
+                            <td className="px-4 py-2 border-r border-slate-200 p-0">
+                              <input
+                                type="text"
+                                value={test.result}
+                                onChange={(e) => {
+                                  const newTests = [...clinical.hematologyTests];
+                                  newTests[index].result = e.target.value;
+                                  setClinical(prev => ({ ...prev, hematologyTests: newTests }));
+                                }}
+                                className="w-full h-full px-4 py-2 border-none bg-transparent focus:ring-inset focus:ring-2 focus:ring-primary outline-none"
+                              />
+                            </td>
+                            <td className="px-4 py-2 border-r border-slate-200 text-center font-bold">
+                              {(() => {
+                                const status = getTestStatus(test.result, test.normalRange);
+                                return status ? (
+                                  <span className={status === 'H' ? 'text-red-600 font-bold' : 'text-yellow-600 font-bold'}>
+                                    {status}
+                                  </span>
+                                ) : null;
+                              })()}
+                            </td>
+                            <td className="px-4 py-2 border-r border-slate-200 text-slate-700">{test.normalRange}</td>
+                            <td className="px-4 py-2 text-slate-500 bg-slate-50/30">{test.unit}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+
+                {/* 3.2 Biochemistry Tests */}
+                <div className="border-b border-slate-200">
+                  <div className="bg-slate-100 px-6 py-2">
+                    <h4 className="text-slate-800 font-semibold text-sm">Xét nghiệm sinh hoá</h4>
+                  </div>
+                  <div className="overflow-x-auto">
+                    <table className="w-full text-sm text-left text-slate-700">
+                      <thead className="bg-slate-50 text-slate-700 font-bold border-b border-slate-200">
+                        <tr>
+                          <th className="px-4 py-3 border-r border-slate-200">Tên xét nghiệm</th>
+                          <th className="px-4 py-3 border-r border-slate-200 w-32">Kết quả</th>
+                          <th className="px-4 py-3 border-r border-slate-200 w-16 text-center">Ghi chú</th>
+                          <th className="px-4 py-3 border-r border-slate-200 w-32">Chỉ số BT</th>
+                          <th className="px-4 py-3">Đơn vị</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-slate-200">
+                        {clinical.biochemistryTests?.map((test, index) => (
+                          <tr key={test.id} className="hover:bg-slate-50/50">
+                            <td className="px-4 py-2 font-medium text-slate-900 border-r border-slate-200">{test.name}</td>
+                            <td className="px-4 py-2 border-r border-slate-200 p-0">
+                              <input
+                                type="text"
+                                value={test.result}
+                                onChange={(e) => {
+                                  const newTests = [...clinical.biochemistryTests];
+                                  newTests[index].result = e.target.value;
+                                  setClinical(prev => ({ ...prev, biochemistryTests: newTests }));
+                                }}
+                                className="w-full h-full px-4 py-2 border-none bg-transparent focus:ring-inset focus:ring-2 focus:ring-primary outline-none"
+                              />
+                            </td>
+                            <td className="px-4 py-2 border-r border-slate-200 text-center font-bold">
+                              {(() => {
+                                const status = getTestStatus(test.result, test.normalRange);
+                                return status ? (
+                                  <span className={status === 'H' ? 'text-red-600 font-bold' : 'text-yellow-600 font-bold'}>
+                                    {status}
+                                  </span>
+                                ) : null;
+                              })()}
+                            </td>
+                            <td className="px-4 py-2 border-r border-slate-200 text-slate-700">{test.normalRange}</td>
+                            <td className="px-4 py-2 text-slate-500 bg-slate-50/30">{test.unit}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+
+                {/* 3.3 Fluid Tests */}
+                <div className="border-b border-slate-200">
+                  <div className="bg-slate-100 px-6 py-2">
+                    <h4 className="text-slate-800 font-semibold text-sm">Xét nghiệm dịch</h4>
+                  </div>
+                  <div className="overflow-x-auto">
+                    <table className="w-full text-sm text-left text-slate-700">
+                      <thead className="bg-slate-50 text-slate-700 font-bold border-b border-slate-200">
+                        <tr>
+                          <th className="px-4 py-3 border-r border-slate-200">Tên xét nghiệm</th>
+                          <th className="px-4 py-3 border-r border-slate-200 w-32">Kết quả</th>
+                          <th className="px-4 py-3 border-r border-slate-200 w-16 text-center">Ghi chú</th>
+                          <th className="px-4 py-3 border-r border-slate-200 w-32">Chỉ số BT</th>
+                          <th className="px-4 py-3">Đơn vị</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-slate-200">
+                        {clinical.fluidTests?.map((test, index) => (
+                          <tr key={test.id} className="hover:bg-slate-50/50">
+                            <td className="px-4 py-2 font-medium text-slate-900 border-r border-slate-200">{test.name}</td>
+                            <td className="px-4 py-2 border-r border-slate-200 p-0">
+                              <input
+                                type="text"
+                                value={test.result}
+                                onChange={(e) => {
+                                  const newTests = [...clinical.fluidTests];
+                                  newTests[index].result = e.target.value;
+                                  setClinical(prev => ({ ...prev, fluidTests: newTests }));
+                                }}
+                                className="w-full h-full px-4 py-2 border-none bg-transparent focus:ring-inset focus:ring-2 focus:ring-primary outline-none"
+                              />
+                            </td>
+                            <td className="px-4 py-2 border-r border-slate-200 text-center font-bold">
+                              {(() => {
+                                const status = getTestStatus(test.result, test.normalRange);
+                                return status ? (
+                                  <span className={status === 'H' ? 'text-red-600 font-bold' : 'text-yellow-600 font-bold'}>
+                                    {status}
+                                  </span>
+                                ) : null;
+                              })()}
+                            </td>
+                            <td className="px-4 py-2 border-r border-slate-200 text-slate-700">{test.normalRange}</td>
+                            <td className="px-4 py-2 text-slate-500 bg-slate-50/30">{test.unit}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+
+                {/* 3.4 Cấy khuẩn & Nhuộm Gram */}
+                <div>
+                  <div className="bg-slate-100 px-6 py-2">
+                    <h4 className="text-slate-800 font-semibold text-sm">Cấy khuẩn & Nhuộm Gram</h4>
+                  </div>
+                  <div className="overflow-x-auto">
+                    <table className="w-full text-sm text-left text-slate-700">
+                      <thead className="bg-slate-50 text-slate-700 font-bold border-b border-slate-200">
+                        <tr>
+                          <th className="px-4 py-3 border-r border-slate-200">Tên xét nghiệm</th>
+                          <th className="px-4 py-3 border-r border-slate-200 w-32">Kết quả</th>
+                          <th className="px-4 py-3 border-r border-slate-200 w-32">Chỉ số BT</th>
+                          <th className="px-4 py-3">Đơn vị</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-slate-200">
+                        {clinical.fluidAnalysis?.map((test, index) => (
+                          <tr key={test.id} className="hover:bg-slate-50/50">
+                            <td className="px-4 py-2 font-medium text-slate-900 border-r border-slate-200">{test.name}</td>
+                            <td className="px-4 py-2 border-r border-slate-200 p-0">
+                              {test.name === 'Nhuộm Gram' ? (
+                                <div className="flex flex-wrap gap-1 p-2">
+                                  {['Gram Dương', 'Gram Âm', 'Âm tính'].map((opt) => (
+                                    <label key={opt} className="inline-flex items-center gap-1 cursor-pointer bg-slate-100 px-2 py-1 rounded border border-slate-200 hover:bg-white transition-colors">
+                                      <input
+                                        type="checkbox"
+                                        checked={test.result.includes(opt)}
+                                        onChange={(e) => {
+                                          const current = test.result ? test.result.split(', ').filter(Boolean) : [];
+                                          let newResult;
+                                          if (e.target.checked) {
+                                            newResult = [...current, opt].join(', ');
+                                          } else {
+                                            newResult = current.filter(x => x !== opt).join(', ');
+                                          }
+                                          const newTests = [...(clinical.fluidAnalysis || [])];
+                                          newTests[index].result = newResult;
+                                          setClinical(prev => ({ ...prev, fluidAnalysis: newTests }));
+                                        }}
+                                        className="w-3 h-3 accent-primary rounded-sm"
+                                      />
+                                      <span className="text-xs font-medium">{opt}</span>
+                                    </label>
+                                  ))}
+                                </div>
+                              ) : test.name === 'Cấy khuẩn' ? (
+                                <div className="p-2 space-y-2">
+                                  {clinical.cultureSamples?.map((sample, sampleIdx) => (
+                                    <div key={sample.sampleNumber} className="flex items-center gap-2 text-xs">
+                                      <span className="font-medium text-slate-600 w-14">Mẫu {sample.sampleNumber}:</span>
+                                      <label className="inline-flex items-center gap-1 cursor-pointer">
+                                        <input
+                                          type="radio"
+                                          name={`culture-${sampleIdx}`}
+                                          checked={sample.status === 'negative'}
+                                          onChange={() => {
+                                            const newSamples = [...clinical.cultureSamples];
+                                            newSamples[sampleIdx] = {
+                                              ...newSamples[sampleIdx],
+                                              status: 'negative',
+                                              bacteriaName: ''
+                                            };
+                                            setClinical(prev => ({ ...prev, cultureSamples: newSamples }));
+                                          }}
+                                          className="w-3 h-3 accent-primary"
+                                        />
+                                        <span className="text-slate-700">Âm tính</span>
+                                      </label>
+                                      <label className="inline-flex items-center gap-1 cursor-pointer">
+                                        <input
+                                          type="radio"
+                                          name={`culture-${sampleIdx}`}
+                                          checked={sample.status === 'positive'}
+                                          onChange={() => {
+                                            const newSamples = [...clinical.cultureSamples];
+                                            newSamples[sampleIdx] = { ...newSamples[sampleIdx], status: 'positive' };
+                                            setClinical(prev => ({ ...prev, cultureSamples: newSamples }));
+                                          }}
+                                          className="w-3 h-3 accent-primary"
+                                        />
+                                        <span className="text-slate-700">Dương tính</span>
+                                      </label>
+                                      {sample.status === 'positive' && (
+                                        <input
+                                          type="text"
+                                          value={sample.bacteriaName}
+                                          onChange={(e) => {
+                                            const newSamples = [...clinical.cultureSamples];
+                                            newSamples[sampleIdx] = { ...newSamples[sampleIdx], bacteriaName: e.target.value };
+                                            setClinical(prev => ({ ...prev, cultureSamples: newSamples }));
+                                          }}
+                                          placeholder="Tên vi khuẩn..."
+                                          className="flex-1 px-2 py-1 border border-slate-300 rounded text-xs focus:ring-1 focus:ring-primary focus:border-primary outline-none"
+                                        />
+                                      )}
+                                    </div>
+                                  ))}
+                                </div>
+                              ) : (
+                                <input
+                                  type="text"
+                                  value={test.result}
+                                  onChange={(e) => {
+                                    const newTests = [...(clinical.fluidAnalysis || [])];
+                                    newTests[index].result = e.target.value;
+                                    setClinical(prev => ({ ...prev, fluidAnalysis: newTests }));
+                                  }}
+                                  className="w-full h-full px-4 py-2 border-none bg-transparent focus:ring-inset focus:ring-2 focus:ring-primary outline-none"
+                                />
+                              )}
+                            </td>
+                            <td className="px-4 py-2 border-r border-slate-200 text-slate-700">{test.normalRange}</td>
+                            <td className="px-4 py-2 text-slate-500 bg-slate-50/30">{test.unit}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </section>
+
+              {/* 4. Other Tests */}
+              <section className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+                <div className="bg-slate-50 px-6 py-4 border-b border-slate-200">
+                  <h3 className="text-slate-900 font-bold text-lg flex items-center gap-2">
+                    <span className="flex items-center justify-center w-6 h-6 rounded-full bg-primary/10 text-primary text-xs font-bold">4</span>
+                    Xét nghiệm khác
                   </h3>
                 </div>
                 <div className="overflow-x-auto">
                   <table className="w-full text-sm text-left text-slate-700">
-
                     <thead className="bg-slate-50 text-slate-700 font-bold border-b border-slate-200">
                       <tr>
                         <th className="px-4 py-3 border-r border-slate-200">Tên xét nghiệm</th>
@@ -343,7 +625,7 @@ export const ClinicalAssessmentPage: React.FC = () => {
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-slate-200">
-                      {clinical.bloodTests?.map((test, index) => (
+                      {clinical.otherTests?.map((test, index) => (
                         <tr key={test.id} className="hover:bg-slate-50/50">
                           <td className="px-4 py-2 font-medium text-slate-900 border-r border-slate-200">{test.name}</td>
                           <td className="px-4 py-2 border-r border-slate-200 p-0">
@@ -351,9 +633,9 @@ export const ClinicalAssessmentPage: React.FC = () => {
                               type="text"
                               value={test.result}
                               onChange={(e) => {
-                                const newTests = [...(clinical.bloodTests || [])];
+                                const newTests = [...clinical.otherTests];
                                 newTests[index].result = e.target.value;
-                                setClinical(prev => ({ ...prev, bloodTests: newTests }));
+                                setClinical(prev => ({ ...prev, otherTests: newTests }));
                               }}
                               className="w-full h-full px-4 py-2 border-none bg-transparent focus:ring-inset focus:ring-2 focus:ring-primary outline-none"
                             />
@@ -368,135 +650,7 @@ export const ClinicalAssessmentPage: React.FC = () => {
                               ) : null;
                             })()}
                           </td>
-                          <td className="px-4 py-2 border-r border-slate-200 text-slate-700">
-                            {test.normalRange}
-                          </td>
-                          <td className="px-4 py-2 text-slate-500 bg-slate-50/30">{test.unit}</td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              </section>
-
-
-              {/* 4. Fluid Analysis */}
-              <section className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
-                <div className="bg-slate-50 px-6 py-4 border-b border-slate-200">
-                  <h3 className="text-slate-900 font-bold text-lg flex items-center gap-2">
-                    <span className="flex items-center justify-center w-6 h-6 rounded-full bg-primary/10 text-primary text-xs font-bold">4</span>
-                    Xét nghiệm dịch
-                  </h3>
-                </div>
-                <div className="overflow-x-auto">
-                  <table className="w-full text-sm text-left text-slate-700">
-                    <thead className="bg-slate-50 text-slate-700 font-bold border-b border-slate-200">
-                      <tr>
-                        <th className="px-4 py-3 border-r border-slate-200">Tên xét nghiệm</th>
-                        <th className="px-4 py-3 border-r border-slate-200 w-32">Kết quả</th>
-                        <th className="px-4 py-3 border-r border-slate-200 w-32">Chỉ số BT</th>
-                        <th className="px-4 py-3">Đơn vị</th>
-                      </tr>
-                    </thead>
-                    <tbody className="divide-y divide-slate-200">
-                      {clinical.fluidAnalysis?.map((test, index) => (
-                        <tr key={test.id} className="hover:bg-slate-50/50">
-                          <td className="px-4 py-2 font-medium text-slate-900 border-r border-slate-200">{test.name}</td>
-                          <td className="px-4 py-2 border-r border-slate-200 p-0">
-                            {test.name === 'Nhuộm Gram' ? (
-                              <div className="flex flex-wrap gap-1 p-2">
-                                {['Gram Dương', 'Gram Âm', 'Âm tính'].map((opt) => (
-                                  <label key={opt} className="inline-flex items-center gap-1 cursor-pointer bg-slate-100 px-2 py-1 rounded border border-slate-200 hover:bg-white transition-colors">
-                                    <input
-                                      type="checkbox"
-                                      checked={test.result.includes(opt)}
-                                      onChange={(e) => {
-                                        const current = test.result ? test.result.split(', ').filter(Boolean) : [];
-                                        let newResult;
-                                        if (e.target.checked) {
-                                          newResult = [...current, opt].join(', ');
-                                        } else {
-                                          newResult = current.filter(x => x !== opt).join(', ');
-                                        }
-                                        const newTests = [...(clinical.fluidAnalysis || [])];
-                                        newTests[index].result = newResult;
-                                        setClinical(prev => ({ ...prev, fluidAnalysis: newTests }));
-                                      }}
-                                      className="w-3 h-3 accent-primary rounded-sm"
-                                    />
-                                    <span className="text-xs font-medium">{opt}</span>
-                                  </label>
-                                ))}
-                              </div>
-                            ) : test.name === 'Cấy khuẩn' ? (
-                              <div className="p-2 space-y-2">
-                                {clinical.cultureSamples?.map((sample, sampleIdx) => (
-                                  <div key={sample.sampleNumber} className="flex items-center gap-2 text-xs">
-                                    <span className="font-medium text-slate-600 w-14">Mẫu {sample.sampleNumber}:</span>
-                                    <label className="inline-flex items-center gap-1 cursor-pointer">
-                                      <input
-                                        type="radio"
-                                        name={`culture-${sampleIdx}`}
-                                        checked={sample.status === 'negative'}
-                                        onChange={() => {
-                                          const newSamples = [...clinical.cultureSamples];
-                                          newSamples[sampleIdx] = {
-                                            ...newSamples[sampleIdx],
-                                            status: 'negative',
-                                            bacteriaName: ''
-                                          };
-                                          setClinical(prev => ({ ...prev, cultureSamples: newSamples }));
-                                        }}
-                                        className="w-3 h-3 accent-primary"
-                                      />
-                                      <span className="text-slate-700">Âm tính</span>
-                                    </label>
-                                    <label className="inline-flex items-center gap-1 cursor-pointer">
-                                      <input
-                                        type="radio"
-                                        name={`culture-${sampleIdx}`}
-                                        checked={sample.status === 'positive'}
-                                        onChange={() => {
-                                          const newSamples = [...clinical.cultureSamples];
-                                          newSamples[sampleIdx] = { ...newSamples[sampleIdx], status: 'positive' };
-                                          setClinical(prev => ({ ...prev, cultureSamples: newSamples }));
-                                        }}
-                                        className="w-3 h-3 accent-primary"
-                                      />
-                                      <span className="text-slate-700">Dương tính</span>
-                                    </label>
-                                    {sample.status === 'positive' && (
-                                      <input
-                                        type="text"
-                                        value={sample.bacteriaName}
-                                        onChange={(e) => {
-                                          const newSamples = [...clinical.cultureSamples];
-                                          newSamples[sampleIdx] = { ...newSamples[sampleIdx], bacteriaName: e.target.value };
-                                          setClinical(prev => ({ ...prev, cultureSamples: newSamples }));
-                                        }}
-                                        placeholder="Tên vi khuẩn..."
-                                        className="flex-1 px-2 py-1 border border-slate-300 rounded text-xs focus:ring-1 focus:ring-primary focus:border-primary outline-none"
-                                      />
-                                    )}
-                                  </div>
-                                ))}
-                              </div>
-                            ) : (
-                              <input
-                                type="text"
-                                value={test.result}
-                                onChange={(e) => {
-                                  const newTests = [...(clinical.fluidAnalysis || [])];
-                                  newTests[index].result = e.target.value;
-                                  setClinical(prev => ({ ...prev, fluidAnalysis: newTests }));
-                                }}
-                                className="w-full h-full px-4 py-2 border-none bg-transparent focus:ring-inset focus:ring-2 focus:ring-primary outline-none"
-                              />
-                            )}
-                          </td>
-                          <td className="px-4 py-2 border-r border-slate-200 text-slate-700">
-                            {test.normalRange}
-                          </td>
+                          <td className="px-4 py-2 border-r border-slate-200 text-slate-700">{test.normalRange}</td>
                           <td className="px-4 py-2 text-slate-500 bg-slate-50/30">{test.unit}</td>
                         </tr>
                       ))}

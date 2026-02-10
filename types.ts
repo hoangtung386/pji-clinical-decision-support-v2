@@ -46,6 +46,14 @@ export interface CultureSample {
   bacteriaName: string;
 }
 
+export interface TestItem {
+  id: string;
+  name: string;
+  result: string;
+  normalRange: string;
+  unit: string;
+}
+
 export interface ClinicalAssessment {
   major: {
     sinusTract: boolean;
@@ -69,20 +77,11 @@ export interface ClinicalAssessment {
       name: string;
     }[];
   };
-  bloodTests: {
-    id: string;
-    name: string;
-    result: string;
-    normalRange: string;
-    unit: string;
-  }[];
-  fluidAnalysis: {
-    id: string;
-    name: string;
-    result: string;
-    normalRange: string;
-    unit: string;
-  }[];
+  hematologyTests: TestItem[];
+  biochemistryTests: TestItem[];
+  fluidTests: TestItem[];
+  otherTests: TestItem[];
+  fluidAnalysis: TestItem[];  // For Cấy khuẩn and Nhuộm Gram only
   cultureSamples: CultureSample[];
   diagnosis: {
     score: number;
