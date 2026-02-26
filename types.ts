@@ -62,11 +62,9 @@ export interface ClinicalAssessment {
   symptoms: {
     fever: boolean;
     sinusTract: boolean;
-    erythema: boolean;
     pain: boolean;
     swelling: boolean;
     drainage: boolean;
-    purulence: boolean;
   };
   imaging: {
     description: string;

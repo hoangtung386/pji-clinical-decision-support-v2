@@ -56,11 +56,9 @@ const defaultClinical: ClinicalAssessment = {
   symptoms: {
     fever: false,
     sinusTract: false,
-    erythema: false,
     pain: false,
     swelling: false,
     drainage: false,
-    purulence: false,
   },
   imaging: {
     description: '',

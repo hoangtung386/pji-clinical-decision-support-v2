@@ -205,11 +205,9 @@ export const ClinicalAssessmentPage: React.FC = () => {
                   {[
                     { key: 'fever', label: 'Sốt' },
                     { key: 'sinusTract', label: 'Đường rò' },
-                    { key: 'erythema', label: 'Tấy đỏ' },
                     { key: 'pain', label: 'Đau' },
                     { key: 'swelling', label: 'Sưng nề' },
                     { key: 'drainage', label: 'Chảy dịch' },
-                    { key: 'purulence', label: 'Có mủ' },
                   ].map((item) => (
                     <label key={item.key} className="flex items-center gap-3 p-3 rounded-lg hover:bg-slate-50 border border-transparent hover:border-slate-100 transition-colors cursor-pointer">
                       <input
