@@ -27,6 +27,34 @@ async def list_labs(
     return list(result.scalars().all())
 
 
+@router.put("/sync", response_model=list[LabResultResponse])
+async def sync_labs(
+    patient_id: int,
+    data: list[LabResultCreate],
+    db: AsyncSession = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    """Đồng bộ toàn bộ kết quả xét nghiệm (xóa cũ, tạo mới trong 1 transaction)."""
+    from sqlalchemy import delete as sql_delete
+
+    await db.execute(sql_delete(LabResult).where(LabResult.patient_id == patient_id))
+
+    new_labs = []
+    for item in data:
+        if item.wbc is not None or item.neu is not None or item.esr is not None or item.crp is not None:
+            lab = LabResult(patient_id=patient_id, **item.model_dump())
+            db.add(lab)
+            new_labs.append(lab)
+
+    await db.flush()
+    await log_action(db, current_user, "SYNC", "lab", detail=f"{len(new_labs)} labs synced")
+
+    result = await db.execute(
+        select(LabResult).where(LabResult.patient_id == patient_id).order_by(LabResult.created_at)
+    )
+    return list(result.scalars().all())
+
+
 @router.post("/", response_model=LabResultResponse, status_code=status.HTTP_201_CREATED)
 async def create_lab(
     patient_id: int,

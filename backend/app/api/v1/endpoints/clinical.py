@@ -104,6 +104,69 @@ async def update_assessment(
     return await _get_assessment(db, patient_id)
 
 
+@router.put("/sync", response_model=ClinicalResponse)
+async def sync_assessment(
+    patient_id: int,
+    data: ClinicalCreate,
+    db: AsyncSession = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    """Đồng bộ toàn bộ đánh giá lâm sàng (upsert tất cả)."""
+    from sqlalchemy import delete as sql_delete
+
+    # Get or create assessment
+    result = await db.execute(
+        select(ClinicalAssessment).where(ClinicalAssessment.patient_id == patient_id)
+    )
+    assessment = result.scalar_one_or_none()
+
+    if assessment:
+        assessment.major_criteria = data.major_criteria.model_dump()
+        assessment.symptoms = data.symptoms.model_dump()
+        assessment.imaging_description = data.imaging_description
+        # Delete old children
+        await db.execute(sql_delete(TestResult).where(TestResult.assessment_id == assessment.id))
+        await db.execute(sql_delete(CultureSample).where(CultureSample.assessment_id == assessment.id))
+    else:
+        assessment = ClinicalAssessment(
+            patient_id=patient_id,
+            major_criteria=data.major_criteria.model_dump(),
+            symptoms=data.symptoms.model_dump(),
+            imaging_description=data.imaging_description,
+        )
+        db.add(assessment)
+        await db.flush()
+
+    # Recreate test results
+    for t in data.test_results:
+        db.add(TestResult(assessment_id=assessment.id, **t.model_dump()))
+
+    # Recreate culture samples
+    for c in data.culture_samples:
+        db.add(CultureSample(assessment_id=assessment.id, **c.model_dump()))
+
+    await db.flush()
+
+    # Auto-run diagnosis
+    cultures = [
+        {"status": c.status, "bacteria_name": c.bacteria_name or ""}
+        for c in data.culture_samples
+    ]
+    diag = calculate_diagnosis(
+        symptoms=data.symptoms.model_dump(),
+        major_criteria=data.major_criteria.model_dump(),
+        culture_samples=[{"status": c.status, "bacteria_name": c.bacteria_name or ""} for c in data.culture_samples],
+    )
+    assessment.diagnosis_score = diag["score"]
+    assessment.diagnosis_probability = diag["probability"]
+    assessment.diagnosis_status = diag["status"]
+    assessment.diagnosis_reasoning = diag["reasoning"]
+    await db.flush()
+
+    await log_action(db, current_user, "SYNC", "clinical", assessment.id)
+    return await _get_assessment(db, patient_id)
+
+
 @router.post("/tests", response_model=TestResultResponse, status_code=status.HTTP_201_CREATED)
 async def add_test_result(
     patient_id: int,

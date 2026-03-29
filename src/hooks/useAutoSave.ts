@@ -25,7 +25,6 @@ export function useAutoSave() {
     if (!isAuthenticated()) return;
     const patientId = getPatientId();
     if (!patientId) return;
-
     if (!demographics.name || demographics.name === '(Chưa nhập)') {
       showToast('Vui lòng nhập Họ tên trước khi lưu', 'info');
       return;
@@ -74,6 +73,15 @@ export function useAutoSave() {
 
     setSaving(true);
     try {
+      // Build test results from all categories
+      const allTests = [
+        ...clinical.hematologyTests.map((t) => ({ ...t, category: 'hematology' })),
+        ...clinical.biochemistryTests.map((t) => ({ ...t, category: 'biochemistry' })),
+        ...clinical.fluidTests.map((t) => ({ ...t, category: 'fluid' })),
+        ...clinical.otherTests.map((t) => ({ ...t, category: 'other' })),
+        ...clinical.fluidAnalysis.map((t) => ({ ...t, category: 'fluid_analysis' })),
+      ];
+
       const payload = {
         major_criteria: {
           sinus_tract: clinical.major.sinusTract,
@@ -81,29 +89,22 @@ export function useAutoSave() {
         },
         symptoms: clinical.symptoms,
         imaging_description: clinical.imaging.description || null,
+        test_results: allTests.map((t) => ({
+          category: t.category,
+          name: t.name,
+          result: t.result || null,
+          normal_range: t.normalRange || null,
+          unit: t.unit || null,
+        })),
+        culture_samples: clinical.cultureSamples.map((c) => ({
+          sample_number: c.sampleNumber,
+          status: c.status,
+          bacteria_name: c.bacteriaName || null,
+        })),
       };
 
-      // Check if clinical exists, then PUT or POST
-      let exists = false;
-      try {
-        await api.get(`/patients/${patientId}/clinical/`);
-        exists = true;
-      } catch {
-        exists = false;
-      }
-
-      if (exists) {
-        await api.put(`/patients/${patientId}/clinical/`, payload);
-      } else {
-        await api.post(`/patients/${patientId}/clinical/`, {
-          ...payload,
-          culture_samples: clinical.cultureSamples.map((c) => ({
-            sample_number: c.sampleNumber,
-            status: c.status,
-            bacteria_name: c.bacteriaName || null,
-          })),
-        });
-      }
+      // Use sync endpoint (upsert everything in one call)
+      await api.put(`/patients/${patientId}/clinical/sync`, payload);
 
       setLastSaved(new Date());
       showToast('Đã lưu đánh giá lâm sàng', 'success');
@@ -119,7 +120,6 @@ export function useAutoSave() {
     const patientId = getPatientId();
     if (!patientId) return;
 
-    // Skip if all labs are empty
     const hasData = labData.some(
       (l) => l.wbc !== null || l.neu !== null || l.esr !== null || l.crp !== null,
     );
@@ -127,24 +127,14 @@ export function useAutoSave() {
 
     setSaving(true);
     try {
-      // Delete existing labs first, then create new ones
-      const existing = await api.get<{ id: number }[]>(`/patients/${patientId}/labs/`);
-      for (const lab of existing) {
-        await api.delete(`/patients/${patientId}/labs/${lab.id}`);
-      }
-
-      // Create only labs that have data
-      for (const lab of labData) {
-        if (lab.wbc !== null || lab.neu !== null || lab.esr !== null || lab.crp !== null) {
-          await api.post(`/patients/${patientId}/labs/`, {
-            day: lab.day,
-            wbc: lab.wbc,
-            neu: lab.neu,
-            esr: lab.esr,
-            crp: lab.crp,
-          });
-        }
-      }
+      // Use sync endpoint (atomic replace)
+      await api.put(`/patients/${patientId}/labs/sync`, labData.map((l) => ({
+        day: l.day,
+        wbc: l.wbc,
+        neu: l.neu,
+        esr: l.esr,
+        crp: l.crp,
+      })));
 
       setLastSaved(new Date());
       showToast('Đã lưu kết quả xét nghiệm', 'success');
@@ -159,8 +149,6 @@ export function useAutoSave() {
     if (!isAuthenticated()) return;
     const patientId = getPatientId();
     if (!patientId) return;
-
-    // Skip if no pathogen selected
     if (!treatment.pathogen) return;
 
     setSaving(true);

@@ -3,13 +3,79 @@ import { api, isAuthenticated } from '../lib/utils/apiClient';
 import { usePatient } from '../store/PatientContext';
 import { showToast } from '../components/common/Toast';
 import { setPatientId } from './useAutoSave';
-import { DEFAULT_CLINICAL, DEFAULT_LABS, DEFAULT_TREATMENT } from '../lib/constants/defaults';
+import { DEFAULT_LABS, DEFAULT_TREATMENT } from '../lib/constants/defaults';
 import { CultureStatus } from '../lib/enums/status';
+import type { TestItem, CultureSample } from '../types/index';
 
-/**
- * Hook to load full patient data (demographics + clinical + labs + treatment)
- * from backend into React context.
- */
+interface BackendTestResult {
+  id: number;
+  category: string;
+  name: string;
+  result: string | null;
+  normal_range: string | null;
+  unit: string | null;
+}
+
+interface BackendCultureSample {
+  id: number;
+  sample_number: number;
+  status: string;
+  bacteria_name: string | null;
+}
+
+interface BackendClinical {
+  id: number;
+  patient_id: number;
+  major_criteria: Record<string, boolean>;
+  symptoms: Record<string, boolean>;
+  imaging_description: string | null;
+  diagnosis_score: number;
+  diagnosis_probability: number;
+  diagnosis_status: string;
+  diagnosis_reasoning: string[];
+  test_results: BackendTestResult[];
+  culture_samples: BackendCultureSample[];
+}
+
+interface BackendLab {
+  id: number;
+  day: string;
+  wbc: number | null;
+  neu: number | null;
+  esr: number | null;
+  crp: number | null;
+}
+
+function mapTestResults(
+  backendTests: BackendTestResult[],
+  category: string,
+  fallback: TestItem[],
+): TestItem[] {
+  const filtered = backendTests.filter((t) => t.category === category);
+  if (filtered.length === 0) return fallback;
+
+  return filtered.map((t, i) => ({
+    id: `${category}_${i}`,
+    name: t.name,
+    result: t.result || '',
+    normalRange: t.normal_range || '',
+    unit: t.unit || '',
+  }));
+}
+
+function mapCultureSamples(
+  backendSamples: BackendCultureSample[],
+  fallback: CultureSample[],
+): CultureSample[] {
+  if (backendSamples.length === 0) return fallback;
+
+  return backendSamples.map((s) => ({
+    sampleNumber: s.sample_number,
+    status: s.status === 'positive' ? CultureStatus.POSITIVE : CultureStatus.NEGATIVE,
+    bacteriaName: s.bacteria_name || '',
+  }));
+}
+
 export function useLoadPatient() {
   const { setDemographics, setClinical, setLabData, setTreatment, resetAll } = usePatient();
 
@@ -18,11 +84,10 @@ export function useLoadPatient() {
       if (!isAuthenticated()) return false;
 
       try {
-        // Reset everything first
         resetAll();
         setPatientId(patientId);
 
-        // Load demographics
+        // 1. Load demographics
         const p = await api.get<Record<string, unknown>>(`/patients/${patientId}`);
         setDemographics((prev) => ({
           ...prev,
@@ -60,64 +125,57 @@ export function useLoadPatient() {
             : prev.surgicalHistory,
         }));
 
-        // Load clinical (may not exist)
+        // 2. Load clinical + test results + cultures + diagnosis
         try {
-          const c = await api.get<Record<string, unknown>>(`/patients/${patientId}/clinical/`);
-          const symptoms = c.symptoms as Record<string, boolean> | undefined;
-          const major = c.major_criteria as Record<string, boolean> | undefined;
-          const cultures = c.culture_samples as {
-            sample_number: number;
-            status: string;
-            bacteria_name: string | null;
-          }[];
+          const c = await api.get<BackendClinical>(`/patients/${patientId}/clinical/`);
 
           setClinical((prev) => ({
             ...prev,
             symptoms: {
-              fever: symptoms?.fever || false,
-              sinusTract: symptoms?.sinus_tract || false,
-              pain: symptoms?.pain || false,
-              swelling: symptoms?.swelling || false,
-              drainage: symptoms?.drainage || false,
+              fever: c.symptoms?.fever || false,
+              sinusTract: c.symptoms?.sinus_tract || false,
+              pain: c.symptoms?.pain || false,
+              swelling: c.symptoms?.swelling || false,
+              drainage: c.symptoms?.drainage || false,
             },
             major: {
-              sinusTract: major?.sinus_tract || false,
-              twoPositiveCultures: major?.two_positive_cultures || false,
+              sinusTract: c.major_criteria?.sinus_tract || false,
+              twoPositiveCultures: c.major_criteria?.two_positive_cultures || false,
             },
             imaging: {
               ...prev.imaging,
-              description: (c.imaging_description as string) || '',
+              description: c.imaging_description || '',
             },
-            cultureSamples: Array.isArray(cultures)
-              ? cultures.map((s) => ({
-                  sampleNumber: s.sample_number,
-                  status: s.status === 'positive' ? CultureStatus.POSITIVE : CultureStatus.NEGATIVE,
-                  bacteriaName: s.bacteria_name || '',
-                }))
-              : prev.cultureSamples,
+            // Load test results by category
+            hematologyTests: mapTestResults(c.test_results, 'hematology', prev.hematologyTests),
+            biochemistryTests: mapTestResults(c.test_results, 'biochemistry', prev.biochemistryTests),
+            fluidTests: mapTestResults(c.test_results, 'fluid', prev.fluidTests),
+            otherTests: mapTestResults(c.test_results, 'other', prev.otherTests),
+            fluidAnalysis: mapTestResults(c.test_results, 'fluid_analysis', prev.fluidAnalysis),
+            // Load culture samples
+            cultureSamples: mapCultureSamples(c.culture_samples, prev.cultureSamples),
+            // Load diagnosis
             diagnosis: {
-              score: (c.diagnosis_score as number) || 0,
-              probability: (c.diagnosis_probability as number) || 0,
+              score: c.diagnosis_score || 0,
+              probability: c.diagnosis_probability || 0,
               status: (c.diagnosis_status as typeof prev.diagnosis.status) || prev.diagnosis.status,
-              reasoning: (c.diagnosis_reasoning as string[]) || [],
+              reasoning: c.diagnosis_reasoning || [],
             },
           }));
         } catch {
-          // No clinical data yet - keep defaults
+          // No clinical data yet
         }
 
-        // Load labs (may be empty)
+        // 3. Load labs
         try {
-          const labs = await api.get<
-            { day: string; wbc: number | null; neu: number | null; esr: number | null; crp: number | null }[]
-          >(`/patients/${patientId}/labs/`);
-
+          const labs = await api.get<BackendLab[]>(`/patients/${patientId}/labs/`);
           if (labs.length > 0) {
-            // Merge with default timeline slots
             const defaultDays = DEFAULT_LABS.map((l) => l.day);
             const merged = defaultDays.map((day) => {
               const found = labs.find((l) => l.day === day);
-              return found || { day, wbc: null, neu: null, esr: null, crp: null };
+              return found
+                ? { day, wbc: found.wbc, neu: found.neu, esr: found.esr, crp: found.crp }
+                : { day, wbc: null, neu: null, esr: null, crp: null };
             });
             setLabData(merged);
           }
@@ -125,7 +183,7 @@ export function useLoadPatient() {
           // No labs yet
         }
 
-        // Load treatment (may not exist)
+        // 4. Load treatment
         try {
           const t = await api.get<Record<string, unknown>>(`/patients/${patientId}/treatment/`);
           setTreatment({
