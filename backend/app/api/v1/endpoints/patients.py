@@ -13,6 +13,7 @@ from app.schemas.patient import (
 from app.services.audit_service import log_action
 from app.services.patient_service import (
     create_patient,
+    delete_all_patients,
     delete_patient,
     get_patient,
     get_patient_by_mrn,
@@ -22,6 +23,19 @@ from app.services.patient_service import (
 )
 
 router = APIRouter(prefix="/patients", tags=["Patients"])
+
+
+@router.delete("/reset-all/", status_code=status.HTTP_204_NO_CONTENT)
+async def reset_all(
+    db: AsyncSession = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    """Xóa toàn bộ bệnh nhân (chỉ Admin). Dùng để reset hệ thống."""
+    from app.models.user import UserRole
+    if current_user.role != UserRole.ADMIN:
+        raise HTTPException(status_code=403, detail="Chỉ Admin mới có quyền reset")
+    await delete_all_patients(db)
+    await log_action(db, current_user, "RESET", "patient", detail="Xóa toàn bộ bệnh nhân")
 
 
 @router.get("/search/{mrn}", response_model=PatientResponse)

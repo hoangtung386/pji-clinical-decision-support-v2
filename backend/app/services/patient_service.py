@@ -128,3 +128,19 @@ async def update_patient(
 async def delete_patient(db: AsyncSession, patient: Patient) -> None:
     await db.delete(patient)
     await db.flush()
+
+
+async def delete_all_patients(db: AsyncSession) -> None:
+    from sqlalchemy import delete as sql_delete
+    from app.models.clinical import ClinicalAssessment, TestResult, CultureSample, DiagnosticImage
+    from app.models.lab import LabResult
+    from app.models.treatment import TreatmentPlan
+
+    await db.execute(sql_delete(TestResult))
+    await db.execute(sql_delete(CultureSample))
+    await db.execute(sql_delete(DiagnosticImage))
+    await db.execute(sql_delete(ClinicalAssessment))
+    await db.execute(sql_delete(LabResult))
+    await db.execute(sql_delete(TreatmentPlan))
+    await db.execute(sql_delete(Patient))
+    await db.flush()
