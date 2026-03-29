@@ -125,18 +125,25 @@ async def update_patient(
         except ValueError:
             update_data["implant_nature"] = ImplantNature.PRIMARY
 
+    # Apply updates field by field, skip None values for date fields
     for key, value in update_data.items():
+        if key in ("surgery_date", "symptom_date", "dob") and value is None:
+            continue  # Don't overwrite existing date with None
         setattr(patient, key, value)
 
-    # Recalculate derived fields
-    patient.bmi = calculate_bmi(patient.height, patient.weight)
-    if patient.surgery_date and patient.symptom_date:
-        try:
+    # Recalculate derived fields safely
+    try:
+        patient.bmi = calculate_bmi(patient.height, patient.weight)
+    except Exception:
+        pass
+
+    try:
+        if patient.surgery_date and patient.symptom_date:
             patient.is_acute = is_acute_infection(
                 str(patient.surgery_date), str(patient.symptom_date)
             )
-        except (ValueError, TypeError):
-            pass
+    except Exception:
+        pass
 
     await db.flush()
     return patient

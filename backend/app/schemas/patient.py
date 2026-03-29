@@ -54,6 +54,8 @@ class PatientCreate(BaseModel):
 
 class PatientUpdate(BaseModel):
     name: str | None = None
+    dob: date | None = None
+    gender: str | None = None
     phone: str | None = None
     address: str | None = None
     height: float | None = None
