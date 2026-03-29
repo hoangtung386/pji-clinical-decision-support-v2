@@ -22,7 +22,7 @@ interface NextMrnResponse {
 
 export const CaseSearchPage: React.FC = () => {
   const navigate = useNavigate();
-  const { setDemographics } = usePatient();
+  const { setDemographics, resetAll } = usePatient();
   const [mrn, setMrn] = useState('');
   const [loading, setLoading] = useState(false);
   const [searchResult, setSearchResult] = useState<PatientSearchResult | null>(null);
@@ -112,24 +112,16 @@ export const CaseSearchPage: React.FC = () => {
         gender: 'male',
       });
 
-      // Set patient ID and context
+      // Reset ALL context data (clinical, labs, treatment) to clean state
+      resetAll();
+
+      // Then set only the new patient info
       setPatientId(patient.id);
       localStorage.setItem('current_mrn', newMrn);
       setDemographics((prev) => ({
         ...prev,
         id: String(patient.id),
         mrn: newMrn,
-        name: '',
-        dob: '',
-        gender: 'male',
-        phone: '',
-        address: '',
-        height: 0,
-        weight: 0,
-        bmi: 0,
-        medicalHistory: '',
-        pastMedicalHistory: '',
-        surgicalHistory: [{ id: '1', surgeryDate: '', procedure: '', notes: '' }],
       }));
 
       showToast(`Tạo ca bệnh mới - Mã BN: ${newMrn}`, 'success');

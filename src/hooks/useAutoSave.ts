@@ -33,23 +33,17 @@ export function useAutoSave() {
     setSaving(true);
     try {
       const patientId = getPatientId();
-      const payload = {
-        mrn: demographics.mrn,
+      const payload: Record<string, unknown> = {
         name: demographics.name,
-        dob: demographics.dob,
         gender: demographics.gender,
-        phone: demographics.phone,
-        address: demographics.address,
         height: demographics.height,
         weight: demographics.weight,
-        surgery_date: demographics.surgeryDate || null,
-        symptom_date: demographics.symptomDate || null,
         implant_type: demographics.implantType,
         fixation_type: demographics.fixationType,
         implant_nature: demographics.implantNature,
         comorbidities: demographics.comorbidities,
-        medical_history: demographics.medicalHistory,
-        past_medical_history: demographics.pastMedicalHistory,
+        medical_history: demographics.medicalHistory || null,
+        past_medical_history: demographics.pastMedicalHistory || null,
         related_characteristics: demographics.relatedCharacteristics,
         surgical_history: demographics.surgicalHistory.map((s) => ({
           surgery_date: s.surgeryDate,
@@ -57,6 +51,12 @@ export function useAutoSave() {
           notes: s.notes,
         })),
       };
+      // Only include date fields if they have values
+      if (demographics.dob) payload.dob = demographics.dob;
+      if (demographics.phone) payload.phone = demographics.phone;
+      if (demographics.address) payload.address = demographics.address;
+      if (demographics.surgeryDate) payload.surgery_date = demographics.surgeryDate;
+      if (demographics.symptomDate) payload.symptom_date = demographics.symptomDate;
 
       if (patientId) {
         await api.put(`/patients/${patientId}`, payload);

@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, type ReactNode } from 'react';
+import React, { createContext, useCallback, useContext, useState, type ReactNode } from 'react';
 import type {
   PatientDemographics,
   ClinicalAssessment,
@@ -18,24 +18,33 @@ interface PatientContextType {
   clinical: ClinicalAssessment;
   setClinical: React.Dispatch<React.SetStateAction<ClinicalAssessment>>;
   labData: LabResult[];
+  setLabData: React.Dispatch<React.SetStateAction<LabResult[]>>;
   updateLabData: (day: string, field: keyof LabResult, value: number) => void;
   treatment: TreatmentPlan;
   setTreatment: React.Dispatch<React.SetStateAction<TreatmentPlan>>;
+  resetAll: () => void;
 }
 
 const PatientContext = createContext<PatientContextType | undefined>(undefined);
 
 export const PatientProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const [demographics, setDemographics] = useState<PatientDemographics>(DEFAULT_DEMOGRAPHICS);
-  const [clinical, setClinical] = useState<ClinicalAssessment>(DEFAULT_CLINICAL);
-  const [labData, setLabData] = useState<LabResult[]>(DEFAULT_LABS);
-  const [treatment, setTreatment] = useState<TreatmentPlan>(DEFAULT_TREATMENT);
+  const [demographics, setDemographics] = useState<PatientDemographics>({ ...DEFAULT_DEMOGRAPHICS });
+  const [clinical, setClinical] = useState<ClinicalAssessment>(structuredClone(DEFAULT_CLINICAL));
+  const [labData, setLabData] = useState<LabResult[]>(structuredClone(DEFAULT_LABS));
+  const [treatment, setTreatment] = useState<TreatmentPlan>({ ...DEFAULT_TREATMENT });
 
   const updateLabData = (day: string, field: keyof LabResult, value: number) => {
     setLabData((prev) =>
       prev.map((item) => (item.day === day ? { ...item, [field]: value } : item)),
     );
   };
+
+  const resetAll = useCallback(() => {
+    setDemographics({ ...DEFAULT_DEMOGRAPHICS });
+    setClinical(structuredClone(DEFAULT_CLINICAL));
+    setLabData(structuredClone(DEFAULT_LABS));
+    setTreatment({ ...DEFAULT_TREATMENT });
+  }, []);
 
   return (
     <PatientContext.Provider
@@ -45,9 +54,11 @@ export const PatientProvider: React.FC<{ children: ReactNode }> = ({ children })
         clinical,
         setClinical,
         labData,
+        setLabData,
         updateLabData,
         treatment,
         setTreatment,
+        resetAll,
       }}
     >
       {children}
