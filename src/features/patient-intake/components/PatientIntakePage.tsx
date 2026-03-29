@@ -4,10 +4,22 @@ import { PageHeader } from '../../../components/common/PageHeader';
 import { PageFooter } from '../../../components/common/PageFooter';
 import { SectionCard } from '../../../components/common/SectionCard';
 import { usePatientForm } from '../hooks/usePatientForm';
+import { usePatient } from '../../../store/PatientContext';
 
 export const PatientIntakePage: React.FC = () => {
   const navigate = useNavigate();
   const { demographics, handleInputChange } = usePatientForm();
+  const { setDemographics } = usePatient();
+
+  const toggleComorbidity = (key: string) => {
+    setDemographics((prev) => ({
+      ...prev,
+      comorbidities: {
+        ...prev.comorbidities,
+        [key]: !prev.comorbidities[key as keyof typeof prev.comorbidities],
+      },
+    }));
+  };
 
   return (
     <>
@@ -19,6 +31,7 @@ export const PatientIntakePage: React.FC = () => {
 
       <div className="flex-1 overflow-y-auto p-8 pb-32">
         <div className="max-w-5xl mx-auto space-y-6">
+          {/* Identity */}
           <SectionCard icon="badge" title="Định danh bệnh nhân">
             <div className="p-6 grid grid-cols-1 md:grid-cols-3 gap-6">
               <label className="flex flex-col gap-1.5">
@@ -60,6 +73,18 @@ export const PatientIntakePage: React.FC = () => {
               </label>
 
               <label className="flex flex-col gap-1.5">
+                <span className="text-sm font-medium text-slate-700">Giới tính</span>
+                <select
+                  name="gender"
+                  value={demographics.gender}
+                  onChange={handleInputChange}
+                  className="w-full rounded-lg border-slate-300 h-11 px-3 focus:ring-primary focus:border-primary border"
+                >
+                  <option value="male">Nam</option>
+                  <option value="female">Nữ</option>
+                </select>
+              </label>
+              <label className="flex flex-col gap-1.5">
                 <span className="text-sm font-medium text-slate-700">Số điện thoại</span>
                 <input
                   name="phone"
@@ -70,7 +95,7 @@ export const PatientIntakePage: React.FC = () => {
                   type="tel"
                 />
               </label>
-              <label className="flex flex-col md:col-span-2 gap-1.5">
+              <label className="flex flex-col gap-1.5">
                 <span className="text-sm font-medium text-slate-700">Địa chỉ</span>
                 <input
                   name="address"
@@ -113,6 +138,90 @@ export const PatientIntakePage: React.FC = () => {
                   <span className="text-xs text-slate-500">kg/m²</span>
                 </div>
               </div>
+            </div>
+          </SectionCard>
+
+          {/* Surgery Info */}
+          <SectionCard icon="surgical" title="Thông tin phẫu thuật">
+            <div className="p-6 grid grid-cols-1 md:grid-cols-3 gap-6">
+              <label className="flex flex-col gap-1.5">
+                <span className="text-sm font-medium text-slate-700">Ngày phẫu thuật</span>
+                <input
+                  name="surgeryDate"
+                  value={demographics.surgeryDate}
+                  onChange={handleInputChange}
+                  className="w-full rounded-lg border-slate-300 h-11 px-3 focus:ring-primary focus:border-primary border"
+                  type="date"
+                />
+              </label>
+              <label className="flex flex-col gap-1.5">
+                <span className="text-sm font-medium text-slate-700">Loại khớp nhân tạo</span>
+                <select
+                  name="implantType"
+                  value={demographics.implantType}
+                  onChange={handleInputChange}
+                  className="w-full rounded-lg border-slate-300 h-11 px-3 focus:ring-primary focus:border-primary border"
+                >
+                  <option value="TKA">Khớp gối (TKA)</option>
+                  <option value="THA">Khớp háng (THA)</option>
+                </select>
+              </label>
+              <label className="flex flex-col gap-1.5">
+                <span className="text-sm font-medium text-slate-700">Tính chất phẫu thuật</span>
+                <select
+                  name="implantNature"
+                  value={demographics.implantNature}
+                  onChange={handleInputChange}
+                  className="w-full rounded-lg border-slate-300 h-11 px-3 focus:ring-primary focus:border-primary border"
+                >
+                  <option value="Primary">Lần đầu (Primary)</option>
+                  <option value="Revision">Thay lại (Revision)</option>
+                </select>
+              </label>
+              <label className="flex flex-col gap-1.5">
+                <span className="text-sm font-medium text-slate-700">Loại cố định</span>
+                <select
+                  name="fixationType"
+                  value={demographics.fixationType}
+                  onChange={handleInputChange}
+                  className="w-full rounded-lg border-slate-300 h-11 px-3 focus:ring-primary focus:border-primary border"
+                >
+                  <option value="cemented">Xi măng (Cemented)</option>
+                  <option value="uncemented">Không xi măng (Uncemented)</option>
+                  <option value="hybrid">Hỗn hợp (Hybrid)</option>
+                </select>
+              </label>
+            </div>
+          </SectionCard>
+
+          {/* Comorbidities */}
+          <SectionCard icon="health_and_safety" title="Bệnh nền">
+            <div className="p-6 grid grid-cols-2 md:grid-cols-3 gap-4">
+              {[
+                { key: 'diabetes', label: 'Đái tháo đường' },
+                { key: 'smoking', label: 'Hút thuốc' },
+                { key: 'immunosuppression', label: 'Suy giảm miễn dịch' },
+                { key: 'priorInfection', label: 'Tiền sử nhiễm trùng' },
+                { key: 'malnutrition', label: 'Suy dinh dưỡng' },
+                { key: 'liverDisease', label: 'Bệnh gan' },
+              ].map((item) => (
+                <label
+                  key={item.key}
+                  className="flex items-center gap-3 p-3 rounded-lg hover:bg-slate-50 border border-slate-100 cursor-pointer"
+                >
+                  <input
+                    type="checkbox"
+                    checked={
+                      demographics.comorbidities[
+                        item.key as keyof typeof demographics.comorbidities
+                      ] || false
+                    }
+                    onChange={() => toggleComorbidity(item.key)}
+                    className="w-5 h-5 rounded border-slate-300 accent-primary"
+                  />
+                  <span className="text-sm font-medium text-slate-700">{item.label}</span>
+                </label>
+              ))}
             </div>
           </SectionCard>
         </div>
