@@ -1,0 +1,15 @@
+export { DEFAULT_DEMOGRAPHICS } from './demographics';
+
+export {
+  DEFAULT_HEMATOLOGY_TESTS,
+  DEFAULT_BIOCHEMISTRY_TESTS,
+  DEFAULT_FLUID_TESTS,
+  DEFAULT_OTHER_TESTS,
+  DEFAULT_FLUID_ANALYSIS,
+  DEFAULT_CULTURE_SAMPLES,
+  DEFAULT_CLINICAL,
+} from './clinical';
+
+export { DEFAULT_LABS } from './lab';
+
+export { DEFAULT_TREATMENT } from './treatment';
