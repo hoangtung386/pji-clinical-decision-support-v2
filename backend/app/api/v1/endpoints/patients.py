@@ -114,9 +114,15 @@ async def update(
     except Exception as e:
         raise HTTPException(status_code=422, detail=f"Lỗi cập nhật: {str(e)}")
 
+    # Convert date objects to strings for JSON serialization in audit log
+    raw_changes = data.model_dump(exclude_unset=True)
+    safe_changes = {
+        k: str(v) if hasattr(v, 'isoformat') else v
+        for k, v in raw_changes.items()
+    }
     await log_action(
         db, current_user, "UPDATE", "patient", patient_id,
-        changes=data.model_dump(exclude_unset=True),
+        changes=safe_changes,
     )
     return updated
 
