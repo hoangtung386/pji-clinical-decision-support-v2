@@ -4,4 +4,5 @@ export const MENU_ITEMS = [
   { path: '/clinical', label: 'Lâm sàng và cận lâm sàng', icon: 'clinical_notes', step: 3 },
   { path: '/labs', label: 'Kết quả xét nghiệm', icon: 'biotech', step: 4 },
   { path: '/treatment', label: 'Phác đồ điều trị', icon: 'medical_services', step: 5 },
+  { path: '/chat', label: 'Tư vấn AI', icon: 'smart_toy', step: 6 },
 ] as const;
