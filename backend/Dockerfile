@@ -11,6 +11,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . .
 
+# Build timestamp: 2026-03-30T02
 RUN mkdir -p uploads
 
 ENV PYTHONPATH=/app
