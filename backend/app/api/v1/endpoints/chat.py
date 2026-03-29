@@ -22,11 +22,11 @@ async def chat(
     """
     Hỏi đáp AI về ca bệnh.
 
-    Nếu CHATBOT_SERVICE_URL được cấu hình → gọi sang chatbot microservice.
-    Nếu không → dùng rule-based fallback local.
+    Gửi toàn bộ thông tin ca bệnh (JSON) sang chatbot microservice.
+    Fallback sang rule-based nếu chatbot service không khả dụng.
     """
-    # Build patient context from DB
-    patient_context = ""
+    # Build structured patient context from DB
+    patient_context = {}
     if data.patient_id:
         patient_context = await build_patient_context(db, data.patient_id)
 
@@ -40,9 +40,9 @@ async def chat(
                     f"{settings.chatbot_service_url}/api/chat",
                     json={
                         "message": data.message,
+                        "patient_id": data.patient_id,
                         "patient_context": patient_context,
                         "history": history,
-                        "patient_id": data.patient_id,
                     },
                 )
                 response.raise_for_status()
@@ -51,7 +51,6 @@ async def chat(
             # Fallback to local if external service fails
             result = await generate_response(data.message, patient_context, history)
     else:
-        # No external service configured, use local
         result = await generate_response(data.message, patient_context, history)
 
     await log_action(

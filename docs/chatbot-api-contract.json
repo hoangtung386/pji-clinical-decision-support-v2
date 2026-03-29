@@ -1,0 +1,179 @@
+{
+  "_description": "API Contract giữa pji-backend và pji-chatbot microservice",
+  "_version": "1.0.0",
+  "_endpoint": "POST /api/chat",
+
+  "request": {
+    "_description": "Dữ liệu pji-backend gửi sang pji-chatbot",
+
+    "message": "Câu hỏi của bác sĩ (string, bắt buộc)",
+    "patient_id": 1,
+
+    "patient_context": {
+      "_description": "Toàn bộ thông tin ca bệnh mà bác sĩ đã nhập",
+
+      "demographics": {
+        "mrn": "0",
+        "name": "Nguyễn Văn A",
+        "dob": "1965-10-12",
+        "gender": "male",
+        "phone": "0912345678",
+        "address": "Số 36, Đê Tô Hoàng",
+        "height": 175.0,
+        "weight": 70.0,
+        "bmi": 22.9,
+        "surgery_date": "2026-03-01",
+        "symptom_date": "2026-03-15",
+        "is_acute": true,
+        "implant_type": "TKA",
+        "fixation_type": "cemented",
+        "implant_nature": "Primary",
+        "comorbidities": {
+          "diabetes": false,
+          "smoking": true,
+          "immunosuppression": false,
+          "prior_infection": false,
+          "malnutrition": false,
+          "liver_disease": false
+        },
+        "medical_history": "Đau khớp gối trái 2 tháng, sưng nề tăng dần",
+        "past_medical_history": "Tăng huyết áp, đái tháo đường type 2",
+        "related_characteristics": {
+          "allergy": { "checked": false, "note": "" },
+          "drugs": { "checked": false, "note": "" },
+          "alcohol": { "checked": true, "note": "10 năm" },
+          "smoking": { "checked": true, "note": "15 năm" },
+          "other": { "checked": false, "note": "" }
+        },
+        "surgical_history": [
+          {
+            "surgery_date": "2025-01-15",
+            "procedure": "Thay khớp gối toàn phần",
+            "notes": "Lần đầu, không biến chứng"
+          }
+        ]
+      },
+
+      "clinical_assessment": {
+        "symptoms": {
+          "fever": true,
+          "sinus_tract": false,
+          "pain": true,
+          "swelling": true,
+          "drainage": false
+        },
+        "major_criteria": {
+          "sinus_tract": false,
+          "two_positive_cultures": false
+        },
+        "imaging_description": "X-quang cho thấy lỏng lẻo xi măng quanh xương chày",
+
+        "test_results": {
+          "hematology": [
+            { "name": "Bạch cầu", "result": "12.5", "normal_range": "", "unit": "Tế bào/Vi trường" },
+            { "name": "%NEUT", "result": "85", "normal_range": "40 - 74", "unit": "%" },
+            { "name": "Máu lắng", "result": "45", "normal_range": "< 10", "unit": "mm" }
+          ],
+          "biochemistry": [
+            { "name": "Định lượng CRP", "result": "120", "normal_range": "0 - 5", "unit": "mg/l" },
+            { "name": "D-Dimer", "result": "1.2", "normal_range": "< 0.5", "unit": "μg/mL" },
+            { "name": "Alpha Defensin", "result": "8.5", "normal_range": "< 5.2", "unit": "μg/mL" }
+          ],
+          "fluid": [
+            { "name": "Leukocyte Esterase", "result": "++", "normal_range": "", "unit": "cells/μL" }
+          ],
+          "other": [
+            { "name": "Định lượng Glucose", "result": "5.2", "normal_range": "4.1 - 5.6", "unit": "mmol/l" },
+            { "name": "Định lượng Urê máu", "result": "6.1", "normal_range": "2.8 - 7.2", "unit": "mmol/l" },
+            { "name": "Định lượng Creatinin", "result": "88", "normal_range": "59 - 104", "unit": "µmol/l" },
+            { "name": "Định lượng Albumin", "result": "38", "normal_range": "35 - 52", "unit": "g/L" },
+            { "name": "Định lượng Protein toàn phần", "result": "72", "normal_range": "66 - 83", "unit": "g/L" },
+            { "name": "Điện giải đồ (Na, K, Cl)", "result": "", "normal_range": "", "unit": "mmol/L" },
+            { "name": "Na+", "result": "140", "normal_range": "135 - 145", "unit": "mmol/L" },
+            { "name": "K+", "result": "4.2", "normal_range": "3.5 - 5.0", "unit": "mmol/L" },
+            { "name": "Cl-", "result": "102", "normal_range": "", "unit": "mmol/L" },
+            { "name": "Định lượng Canxi toàn phần", "result": "2.4", "normal_range": "2.2 - 2.65", "unit": "mmol/L" },
+            { "name": "Định lượng HbA1c", "result": "6.8", "normal_range": "4 - 6.2", "unit": "%" },
+            { "name": "Bạch cầu (Dịch)", "result": "15000", "normal_range": "", "unit": "Tế bào/Vi trường" },
+            { "name": "%NEUT (Dịch)", "result": "92", "normal_range": "", "unit": "%" },
+            { "name": "Định lượng CRP (Dịch)", "result": "85", "normal_range": "", "unit": "mg/l" }
+          ],
+          "fluid_analysis": [
+            { "name": "Cấy khuẩn", "result": "Dương tính", "normal_range": "", "unit": "CFU/mL" },
+            { "name": "Nhuộm Gram", "result": "Gram Dương", "normal_range": "", "unit": "" }
+          ]
+        },
+
+        "culture_samples": [
+          { "sample_number": 1, "status": "positive", "bacteria_name": "Staphylococcus aureus" },
+          { "sample_number": 2, "status": "positive", "bacteria_name": "Staphylococcus aureus" },
+          { "sample_number": 3, "status": "negative", "bacteria_name": "" },
+          { "sample_number": 4, "status": "negative", "bacteria_name": "" },
+          { "sample_number": 5, "status": "negative", "bacteria_name": "" }
+        ],
+
+        "diagnosis": {
+          "score": 99,
+          "probability": 95.0,
+          "status": "Infected",
+          "reasoning": [
+            "Tiêu chuẩn chính: 2 mẫu cấy khuẩn dương tính",
+            "Vi khuẩn: Staphylococcus aureus"
+          ]
+        }
+      },
+
+      "lab_results": [
+        { "day": "Trước mổ", "wbc": 6.5, "neu": 55.0, "esr": 12.0, "crp": 4.0 },
+        { "day": "Ngày 1", "wbc": 12.1, "neu": 82.0, "esr": 45.0, "crp": 145.0 },
+        { "day": "Ngày 3", "wbc": 9.8, "neu": 65.0, "esr": 38.0, "crp": 85.0 },
+        { "day": "Ngày 7", "wbc": 7.2, "neu": 58.0, "esr": 25.0, "crp": 35.0 }
+      ],
+
+      "treatment_plan": {
+        "pathogen": "mrsa",
+        "resistance": "vancomycin",
+        "iv_drug": "Daptomycin",
+        "iv_dosage": "6-8 mg/kg IV",
+        "iv_duration": "2-4 tuần",
+        "oral_drug": "Rifampin + Ciprofloxacin",
+        "oral_dosage": "600mg mỗi ngày / 750mg BID",
+        "oral_duration": "3-6 tuần",
+        "citation": "Đối với PJI do MRSA khi MIC Vancomycin > 1.5 mcg/mL, Daptomycin được khuyến cáo.",
+        "confidence": 94.0
+      }
+    },
+
+    "history": [
+      { "role": "user", "content": "Chẩn đoán ca bệnh này theo ICM 2018" },
+      { "role": "assistant", "content": "Dựa trên dữ liệu ca bệnh, hệ thống phát hiện 2 mẫu cấy dương tính..." }
+    ]
+  },
+
+  "response": {
+    "_description": "Dữ liệu pji-chatbot trả về cho pji-backend",
+
+    "reply": "Dựa trên phân tích ca bệnh #0 của bệnh nhân Nguyễn Văn A, kết quả chẩn đoán cho thấy...",
+    "sources": [
+      "ICM 2018 Consensus Guidelines - Section 3.2: Major Criteria",
+      "IDSA Guidelines for PJI Management 2023",
+      "AAOS Clinical Practice Guidelines - Diagnosis of PJI"
+    ],
+    "context_used": true,
+
+    "_optional_fields": {
+      "confidence_score": 0.92,
+      "suggested_actions": [
+        "Cân nhắc phẫu thuật DAIR trong 3 tuần đầu",
+        "Theo dõi CRP sau 2 tuần điều trị kháng sinh"
+      ],
+      "related_documents": [
+        {
+          "title": "ICM 2018 - Diagnostic Criteria for PJI",
+          "chunk": "Two positive cultures of the same organism...",
+          "relevance_score": 0.95
+        }
+      ]
+    }
+  }
+}
