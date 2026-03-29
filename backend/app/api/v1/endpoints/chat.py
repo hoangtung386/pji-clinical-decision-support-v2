@@ -1,6 +1,8 @@
+import httpx
 from fastapi import APIRouter, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from app.core.config import settings
 from app.core.deps import get_current_user
 from app.db.session import get_db
 from app.models.user import User
@@ -17,24 +19,43 @@ async def chat(
     db: AsyncSession = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ):
-    """Hỏi đáp AI về ca bệnh (RAG-ready)."""
+    """
+    Hỏi đáp AI về ca bệnh.
+
+    Nếu CHATBOT_SERVICE_URL được cấu hình → gọi sang chatbot microservice.
+    Nếu không → dùng rule-based fallback local.
+    """
+    # Build patient context from DB
     patient_context = ""
     if data.patient_id:
         patient_context = await build_patient_context(db, data.patient_id)
 
     history = [{"role": m.role, "content": m.content} for m in data.history]
 
-    result = await generate_response(
-        message=data.message,
-        patient_context=patient_context,
-        history=history,
-    )
+    # Try external chatbot service first
+    if settings.chatbot_service_url:
+        try:
+            async with httpx.AsyncClient(timeout=30.0) as client:
+                response = await client.post(
+                    f"{settings.chatbot_service_url}/api/chat",
+                    json={
+                        "message": data.message,
+                        "patient_context": patient_context,
+                        "history": history,
+                        "patient_id": data.patient_id,
+                    },
+                )
+                response.raise_for_status()
+                result = response.json()
+        except Exception:
+            # Fallback to local if external service fails
+            result = await generate_response(data.message, patient_context, history)
+    else:
+        # No external service configured, use local
+        result = await generate_response(data.message, patient_context, history)
 
     await log_action(
-        db,
-        current_user,
-        "CHAT",
-        "chat",
+        db, current_user, "CHAT", "chat",
         resource_id=data.patient_id,
         detail=data.message[:100],
     )

@@ -27,6 +27,9 @@ class Settings(BaseSettings):
     upload_dir: str = "uploads"
     max_upload_size_mb: int = 10
 
+    # External Chatbot Service (separate repo/server)
+    chatbot_service_url: str = ""  # e.g. https://pji-chatbot.onrender.com
+
     model_config = {"env_file": ".env", "env_file_encoding": "utf-8"}
 
 
