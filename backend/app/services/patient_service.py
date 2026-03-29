@@ -22,19 +22,23 @@ async def get_patient_by_mrn(db: AsyncSession, mrn: str) -> Patient | None:
 
 async def get_next_mrn(db: AsyncSession) -> str:
     """Generate next auto-increment MRN starting from '0'."""
-    result = await db.execute(
-        select(func.max(func.cast(Patient.mrn, func.text())))
-    )
-    max_mrn = result.scalar_one_or_none()
+    result = await db.execute(select(Patient.mrn))
+    all_mrns = [row[0] for row in result.all()]
 
-    if max_mrn is None:
+    if not all_mrns:
         return "0"
 
-    try:
-        return str(int(max_mrn) + 1)
-    except (ValueError, TypeError):
-        count = await db.execute(select(func.count(Patient.id)))
-        return str(count.scalar_one())
+    numeric_mrns = []
+    for m in all_mrns:
+        try:
+            numeric_mrns.append(int(m))
+        except (ValueError, TypeError):
+            continue
+
+    if not numeric_mrns:
+        return "0"
+
+    return str(max(numeric_mrns) + 1)
 
 
 async def create_patient(
