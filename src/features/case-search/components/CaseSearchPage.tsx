@@ -4,6 +4,7 @@ import { api, isAuthenticated } from '../../../lib/utils/apiClient';
 import { showToast } from '../../../components/common/Toast';
 import { usePatient } from '../../../store/PatientContext';
 import { setPatientId } from '../../../hooks/useAutoSave';
+import { useLoadPatient } from '../../../hooks/useLoadPatient';
 
 interface PatientSearchResult {
   id: number;
@@ -23,6 +24,7 @@ interface NextMrnResponse {
 export const CaseSearchPage: React.FC = () => {
   const navigate = useNavigate();
   const { setDemographics, resetAll } = usePatient();
+  const { loadPatient } = useLoadPatient();
   const [mrn, setMrn] = useState('');
   const [loading, setLoading] = useState(false);
   const [searchResult, setSearchResult] = useState<PatientSearchResult | null>(null);
@@ -59,36 +61,13 @@ export const CaseSearchPage: React.FC = () => {
   const handleOpenCase = async () => {
     if (!searchResult) return;
 
-    // Load full patient data from backend
-    try {
-      const full = await api.get<Record<string, unknown>>(`/patients/${searchResult.id}`);
-      setPatientId(searchResult.id);
-      localStorage.setItem('current_mrn', searchResult.mrn);
-      setDemographics((prev) => ({
-        ...prev,
-        id: String(searchResult.id),
-        mrn: searchResult.mrn,
-        name: (full.name as string) || '',
-        dob: (full.dob as string) || '',
-        gender: (full.gender as string) || 'male',
-        phone: (full.phone as string) || '',
-        address: (full.address as string) || '',
-        height: (full.height as number) || 0,
-        weight: (full.weight as number) || 0,
-        bmi: (full.bmi as number) || 0,
-        surgeryDate: (full.surgery_date as string) || '',
-        symptomDate: (full.symptom_date as string) || '',
-        isAcute: (full.is_acute as boolean) || false,
-        implantType: (full.implant_type as 'THA' | 'TKA') || 'TKA',
-        fixationType: (full.fixation_type as string) || 'cemented',
-        implantNature: (full.implant_nature as 'Primary' | 'Revision') || 'Primary',
-        medicalHistory: (full.medical_history as string) || '',
-        pastMedicalHistory: (full.past_medical_history as string) || '',
-      }));
+    setLoading(true);
+    const ok = await loadPatient(searchResult.id);
+    setLoading(false);
+
+    if (ok) {
       showToast(`Đã mở ca bệnh #${searchResult.mrn} - ${searchResult.name}`, 'success');
       navigate('/intake');
-    } catch {
-      showToast('Lỗi khi tải dữ liệu bệnh nhân', 'error');
     }
   };
 
