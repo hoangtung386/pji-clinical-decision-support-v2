@@ -1,20 +1,18 @@
 import type { PatientDemographics } from '../../../types/index';
 
-const todayStr = () => new Date().toISOString().split('T')[0];
-
 export const DEFAULT_DEMOGRAPHICS: PatientDemographics = {
-  id: '1293',
-  name: 'Nguyễn Văn A',
-  mrn: '482910',
-  dob: '1965-10-12',
+  id: '',
+  name: '',
+  mrn: '',
+  dob: '',
   gender: 'male',
   phone: '',
   address: '',
-  height: 175,
-  weight: 70,
-  bmi: 22.9,
-  surgeryDate: todayStr(),
-  symptomDate: todayStr(),
+  height: 0,
+  weight: 0,
+  bmi: 0,
+  surgeryDate: '',
+  symptomDate: '',
   isAcute: false,
   implantType: 'TKA',
   fixationType: 'cemented',

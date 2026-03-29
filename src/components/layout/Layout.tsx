@@ -48,9 +48,13 @@ export const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) =>
         <div className="flex flex-col">
           {/* Header */}
           <div className="flex items-center gap-3 px-6 py-6">
-            <div className="flex items-center justify-center w-10 h-10 rounded-xl bg-primary/10 text-primary">
+            <button
+              onClick={() => navigate('/')}
+              className="flex items-center justify-center w-10 h-10 rounded-xl bg-primary/10 text-primary hover:bg-primary/20 transition-colors"
+              title="Quay lại tra cứu"
+            >
               <span className="material-symbols-outlined text-[24px]">orthopedics</span>
-            </div>
+            </button>
             <div>
               <h1 className="text-slate-900 text-lg font-bold leading-tight">OrthoSurg PJI</h1>
               <p className="text-slate-500 text-xs font-medium">Bộ chẩn đoán v2.4</p>
@@ -61,14 +65,18 @@ export const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) =>
           <div className="mx-4 mb-6 mt-2 rounded-xl bg-slate-50 border border-slate-100 p-4">
             <div className="flex items-start gap-3">
               <div className="w-10 h-10 rounded-full bg-slate-200 flex items-center justify-center text-slate-500 font-bold text-xs">
-                {initials}
+                {initials || '?'}
               </div>
               <div className="flex flex-col">
                 <span className="text-xs uppercase tracking-wider text-slate-500 font-semibold">
                   Ca bệnh hiện tại
                 </span>
-                <h2 className="text-slate-900 text-sm font-bold">Ca số #{demographics.id}</h2>
-                <p className="text-primary text-xs font-medium mt-1">Đang chẩn đoán</p>
+                <h2 className="text-slate-900 text-sm font-bold">
+                  {demographics.mrn ? `Mã BN: ${demographics.mrn}` : 'Chưa chọn ca bệnh'}
+                </h2>
+                <p className="text-primary text-xs font-medium mt-1">
+                  {demographics.name || 'Đang chẩn đoán'}
+                </p>
               </div>
             </div>
           </div>

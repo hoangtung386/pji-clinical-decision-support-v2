@@ -25,6 +25,10 @@ export function useAutoSave() {
 
   const savePatient = useCallback(async (demographics: PatientDemographics) => {
     if (!isAuthenticated()) return;
+    if (!demographics.mrn || !demographics.name || !demographics.dob) {
+      showToast('Vui lòng nhập đủ: Họ tên, Ngày sinh trước khi lưu', 'info');
+      return;
+    }
 
     setSaving(true);
     try {

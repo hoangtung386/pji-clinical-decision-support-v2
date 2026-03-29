@@ -41,9 +41,9 @@ export const PatientIntakePage: React.FC = () => {
                   <input
                     name="mrn"
                     value={demographics.mrn}
-                    onChange={handleInputChange}
-                    className="w-full pl-8 rounded-lg border-slate-300 h-11 px-3 focus:ring-primary focus:border-primary border"
-                    placeholder="ID-123456"
+                    readOnly
+                    className="w-full pl-8 rounded-lg border-slate-300 h-11 px-3 border bg-slate-100 text-slate-600 cursor-not-allowed"
+                    title="Mã bệnh nhân do hệ thống tự cấp"
                     type="text"
                   />
                 </div>
