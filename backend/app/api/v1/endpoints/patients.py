@@ -109,7 +109,11 @@ async def update(
     if not patient:
         raise HTTPException(status_code=404, detail="Không tìm thấy bệnh nhân")
 
-    updated = await update_patient(db, patient, data)
+    try:
+        updated = await update_patient(db, patient, data)
+    except Exception as e:
+        raise HTTPException(status_code=422, detail=f"Lỗi cập nhật: {str(e)}")
+
     await log_action(
         db, current_user, "UPDATE", "patient", patient_id,
         changes=data.model_dump(exclude_unset=True),
