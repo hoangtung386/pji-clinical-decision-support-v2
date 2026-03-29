@@ -102,6 +102,8 @@ async def get_patients(
 async def update_patient(
     db: AsyncSession, patient: Patient, data: PatientUpdate
 ) -> Patient:
+    from app.models.patient import ImplantType, ImplantNature
+
     update_data = data.model_dump(exclude_unset=True)
 
     if "comorbidities" in update_data and update_data["comorbidities"]:
@@ -111,15 +113,30 @@ async def update_patient(
     if "surgical_history" in update_data and update_data["surgical_history"]:
         update_data["surgical_history"] = [r.model_dump() for r in data.surgical_history]
 
+    # Convert string to enum for enum fields
+    if "implant_type" in update_data and update_data["implant_type"]:
+        try:
+            update_data["implant_type"] = ImplantType(update_data["implant_type"])
+        except ValueError:
+            update_data["implant_type"] = ImplantType.TKA
+    if "implant_nature" in update_data and update_data["implant_nature"]:
+        try:
+            update_data["implant_nature"] = ImplantNature(update_data["implant_nature"])
+        except ValueError:
+            update_data["implant_nature"] = ImplantNature.PRIMARY
+
     for key, value in update_data.items():
         setattr(patient, key, value)
 
     # Recalculate derived fields
     patient.bmi = calculate_bmi(patient.height, patient.weight)
     if patient.surgery_date and patient.symptom_date:
-        patient.is_acute = is_acute_infection(
-            str(patient.surgery_date), str(patient.symptom_date)
-        )
+        try:
+            patient.is_acute = is_acute_infection(
+                str(patient.surgery_date), str(patient.symptom_date)
+            )
+        except (ValueError, TypeError):
+            pass
 
     await db.flush()
     return patient
