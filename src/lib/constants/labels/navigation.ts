@@ -1,5 +1,5 @@
 export const MENU_ITEMS = [
-  { path: '/', label: 'Thông tin bệnh nhân', icon: 'person', step: 1 },
+  { path: '/intake', label: 'Thông tin bệnh nhân', icon: 'person', step: 1 },
   { path: '/history', label: 'Tiền sử bệnh', icon: 'history', step: 2 },
   { path: '/clinical', label: 'Lâm sàng và cận lâm sàng', icon: 'clinical_notes', step: 3 },
   { path: '/labs', label: 'Kết quả xét nghiệm', icon: 'biotech', step: 4 },

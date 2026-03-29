@@ -2,6 +2,7 @@ import React from 'react';
 import { HashRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { Layout } from './components/layout/Layout';
 import { PatientProvider } from './store/PatientContext';
+import { CaseSearchPage } from './features/case-search';
 import { PatientIntakePage } from './features/patient-intake';
 import { MedicalHistoryPage } from './features/medical-history';
 import { ClinicalAssessmentPage } from './features/clinical-assessment';
@@ -15,13 +16,14 @@ const App: React.FC = () => (
     <PatientProvider>
       <ToastContainer />
       <Routes>
+        <Route path="/" element={<CaseSearchPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route
           path="/*"
           element={
             <Layout>
               <Routes>
-                <Route path="/" element={<PatientIntakePage />} />
+                <Route path="/intake" element={<PatientIntakePage />} />
                 <Route path="/history" element={<MedicalHistoryPage />} />
                 <Route path="/clinical" element={<ClinicalAssessmentPage />} />
                 <Route path="/labs" element={<LabAnalyticsPage />} />

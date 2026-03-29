@@ -15,11 +15,36 @@ from app.services.patient_service import (
     create_patient,
     delete_patient,
     get_patient,
+    get_patient_by_mrn,
     get_patients,
+    get_next_mrn,
     update_patient,
 )
 
 router = APIRouter(prefix="/patients", tags=["Patients"])
+
+
+@router.get("/search/{mrn}", response_model=PatientResponse)
+async def search_by_mrn(
+    mrn: str,
+    db: AsyncSession = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    """Tìm bệnh nhân theo mã bệnh nhân (MRN)."""
+    patient = await get_patient_by_mrn(db, mrn)
+    if not patient:
+        raise HTTPException(status_code=404, detail="Không tìm thấy bệnh nhân")
+    return patient
+
+
+@router.get("/next-mrn/", response_model=dict)
+async def next_mrn(
+    db: AsyncSession = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    """Lấy mã bệnh nhân tiếp theo (tự động tăng)."""
+    mrn = await get_next_mrn(db)
+    return {"next_mrn": mrn}
 
 
 @router.post("/", response_model=PatientResponse, status_code=status.HTTP_201_CREATED)

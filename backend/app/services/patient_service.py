@@ -1,10 +1,40 @@
-from sqlalchemy import select
+from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
 
 from app.models.patient import Patient
 from app.schemas.patient import PatientCreate, PatientUpdate
 from app.services.icm_scoring import calculate_bmi, is_acute_infection
+
+
+async def get_patient_by_mrn(db: AsyncSession, mrn: str) -> Patient | None:
+    result = await db.execute(
+        select(Patient)
+        .options(
+            selectinload(Patient.clinical_assessment),
+            selectinload(Patient.lab_results),
+            selectinload(Patient.treatment_plan),
+        )
+        .where(Patient.mrn == mrn)
+    )
+    return result.scalar_one_or_none()
+
+
+async def get_next_mrn(db: AsyncSession) -> str:
+    """Generate next auto-increment MRN starting from '0'."""
+    result = await db.execute(
+        select(func.max(func.cast(Patient.mrn, func.text())))
+    )
+    max_mrn = result.scalar_one_or_none()
+
+    if max_mrn is None:
+        return "0"
+
+    try:
+        return str(int(max_mrn) + 1)
+    except (ValueError, TypeError):
+        count = await db.execute(select(func.count(Patient.id)))
+        return str(count.scalar_one())
 
 
 async def create_patient(
