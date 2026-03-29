@@ -56,20 +56,40 @@ export const CaseSearchPage: React.FC = () => {
     }
   };
 
-  const handleOpenCase = () => {
+  const handleOpenCase = async () => {
     if (!searchResult) return;
-    setPatientId(searchResult.id);
-    localStorage.setItem('current_mrn', searchResult.mrn);
-    setDemographics((prev) => ({
-      ...prev,
-      id: String(searchResult.id),
-      mrn: searchResult.mrn,
-      name: searchResult.name,
-      dob: searchResult.dob,
-      gender: searchResult.gender,
-    }));
-    showToast(`Đã mở ca bệnh #${searchResult.mrn} - ${searchResult.name}`, 'success');
-    navigate('/intake');
+
+    // Load full patient data from backend
+    try {
+      const full = await api.get<Record<string, unknown>>(`/patients/${searchResult.id}`);
+      setPatientId(searchResult.id);
+      localStorage.setItem('current_mrn', searchResult.mrn);
+      setDemographics((prev) => ({
+        ...prev,
+        id: String(searchResult.id),
+        mrn: searchResult.mrn,
+        name: (full.name as string) || '',
+        dob: (full.dob as string) || '',
+        gender: (full.gender as string) || 'male',
+        phone: (full.phone as string) || '',
+        address: (full.address as string) || '',
+        height: (full.height as number) || 0,
+        weight: (full.weight as number) || 0,
+        bmi: (full.bmi as number) || 0,
+        surgeryDate: (full.surgery_date as string) || '',
+        symptomDate: (full.symptom_date as string) || '',
+        isAcute: (full.is_acute as boolean) || false,
+        implantType: (full.implant_type as 'THA' | 'TKA') || 'TKA',
+        fixationType: (full.fixation_type as string) || 'cemented',
+        implantNature: (full.implant_nature as 'Primary' | 'Revision') || 'Primary',
+        medicalHistory: (full.medical_history as string) || '',
+        pastMedicalHistory: (full.past_medical_history as string) || '',
+      }));
+      showToast(`Đã mở ca bệnh #${searchResult.mrn} - ${searchResult.name}`, 'success');
+      navigate('/intake');
+    } catch {
+      showToast('Lỗi khi tải dữ liệu bệnh nhân', 'error');
+    }
   };
 
   const handleCreateNew = async () => {
@@ -80,11 +100,25 @@ export const CaseSearchPage: React.FC = () => {
 
     setLoading(true);
     try {
+      // Get next MRN from backend
       const res = await api.get<NextMrnResponse>('/patients/next-mrn/');
+      const newMrn = res.next_mrn;
+
+      // Create patient in DB immediately with this MRN
+      const patient = await api.post<PatientSearchResult>('/patients/', {
+        mrn: newMrn,
+        name: '(Chưa nhập)',
+        dob: '2000-01-01',
+        gender: 'male',
+      });
+
+      // Set patient ID and context
+      setPatientId(patient.id);
+      localStorage.setItem('current_mrn', newMrn);
       setDemographics((prev) => ({
         ...prev,
-        id: '',
-        mrn: res.next_mrn,
+        id: String(patient.id),
+        mrn: newMrn,
         name: '',
         dob: '',
         gender: 'male',
@@ -97,9 +131,8 @@ export const CaseSearchPage: React.FC = () => {
         pastMedicalHistory: '',
         surgicalHistory: [{ id: '1', surgeryDate: '', procedure: '', notes: '' }],
       }));
-      localStorage.removeItem('current_patient_id');
-      localStorage.setItem('current_mrn', res.next_mrn);
-      showToast(`Tạo ca bệnh mới - Mã: ${res.next_mrn}`, 'success');
+
+      showToast(`Tạo ca bệnh mới - Mã BN: ${newMrn}`, 'success');
       navigate('/intake');
     } catch {
       showToast('Lỗi khi tạo ca bệnh mới', 'error');
