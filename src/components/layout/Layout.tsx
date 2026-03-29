@@ -1,11 +1,15 @@
 import React from 'react';
-import { NavLink, useLocation } from 'react-router-dom';
+import { NavLink, useLocation, useNavigate } from 'react-router-dom';
 import { usePatient } from '../../store/PatientContext';
 import { MENU_ITEMS } from '../../lib/constants/labels';
+import { useAutoSave } from '../../hooks/useAutoSave';
+import { clearToken, isAuthenticated } from '../../lib/utils/apiClient';
 
 export const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const { demographics } = usePatient();
+  const { demographics, clinical, labData, treatment } = usePatient();
   const location = useLocation();
+  const navigate = useNavigate();
+  const { saving, lastSaved, savePatient, saveClinical, saveLabs, saveTreatment } = useAutoSave();
 
   const isActive = (path: string) => {
     if (path === '/' && location.pathname === '/') return true;
@@ -17,6 +21,26 @@ export const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) =>
     .split(' ')
     .map((n) => n[0])
     .join('');
+
+  const userInfo = JSON.parse(localStorage.getItem('user_info') || '{}');
+
+  const handleSaveAll = async () => {
+    if (!isAuthenticated()) {
+      navigate('/login');
+      return;
+    }
+    await savePatient(demographics);
+    await saveClinical(clinical);
+    await saveLabs(labData);
+    await saveTreatment(treatment);
+  };
+
+  const handleLogout = () => {
+    clearToken();
+    localStorage.removeItem('user_info');
+    localStorage.removeItem('current_patient_id');
+    navigate('/login');
+  };
 
   return (
     <div className="flex h-screen w-full overflow-hidden bg-slate-50">
@@ -83,11 +107,55 @@ export const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) =>
         </div>
 
         {/* Footer */}
-        <div className="p-4 border-t border-slate-200">
-          <button className="flex w-full items-center justify-center gap-2 rounded-lg bg-white border border-slate-200 px-4 py-2.5 text-sm font-medium text-slate-700 shadow-sm hover:bg-slate-50 transition-colors">
+        <div className="p-4 border-t border-slate-200 space-y-2">
+          {/* Save Status */}
+          {saving && (
+            <div className="flex items-center gap-2 text-xs text-slate-500 px-2">
+              <span className="material-symbols-outlined text-[14px] animate-spin">sync</span>
+              Đang lưu...
+            </div>
+          )}
+          {!saving && lastSaved && (
+            <div className="flex items-center gap-2 text-xs text-green-600 px-2">
+              <span className="material-symbols-outlined text-[14px]">cloud_done</span>
+              Lưu lúc {lastSaved.toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' })}
+            </div>
+          )}
+
+          {/* Save Button */}
+          <button
+            onClick={handleSaveAll}
+            disabled={saving}
+            className="flex w-full items-center justify-center gap-2 rounded-lg bg-primary px-4 py-2.5 text-sm font-bold text-white shadow-sm hover:bg-blue-600 transition-colors disabled:opacity-50"
+          >
             <span className="material-symbols-outlined text-[18px]">save</span>
-            Lưu nháp
+            {saving ? 'Đang lưu...' : 'Lưu toàn bộ'}
           </button>
+
+          {/* User Info & Logout */}
+          {isAuthenticated() && userInfo.username && (
+            <div className="flex items-center justify-between px-2 pt-2">
+              <span className="text-xs text-slate-500 truncate">
+                <span className="material-symbols-outlined text-[14px] align-middle">person</span>{' '}
+                {userInfo.username}
+              </span>
+              <button
+                onClick={handleLogout}
+                className="text-xs text-red-500 hover:text-red-700 font-medium"
+              >
+                Đăng xuất
+              </button>
+            </div>
+          )}
+          {!isAuthenticated() && (
+            <button
+              onClick={() => navigate('/login')}
+              className="flex w-full items-center justify-center gap-2 rounded-lg bg-white border border-slate-200 px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50 transition-colors"
+            >
+              <span className="material-symbols-outlined text-[18px]">login</span>
+              Đăng nhập để lưu dữ liệu
+            </button>
+          )}
         </div>
       </aside>
 
